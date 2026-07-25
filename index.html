@@ -643,6 +643,43 @@
             min-height: 24px;
         }
 
+        /* Game Section */
+        .game-container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.05);
+            text-align: center;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            font-family: var(--font-mono);
+            font-weight: 600;
+        }
+
+        #snake-canvas {
+            background: #000;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            margin-bottom: 1.5rem;
+            max-width: 100%;
+            height: auto;
+            image-rendering: pixelated;
+        }
+
+        .game-hint {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
         footer {
             text-align: center;
             padding: 2rem;
@@ -819,6 +856,22 @@
             </div>
         </section>
 
+        <!-- Interactive Game Section -->
+        <section id="game-section" class="section">
+            <h2 class="section-title">Take a Break: <span class="neon-text">Cyber Snake</span></h2>
+            <div class="game-container">
+                <div class="game-header">
+                    <span>Score: <span id="snake-score" class="neon-text">0</span></span>
+                    <span>High Score: <span id="snake-highscore" class="neon-text">0</span></span>
+                </div>
+                <canvas id="snake-canvas" width="400" height="400"></canvas>
+                <div class="game-controls">
+                    <button id="start-game-btn" class="btn primary-btn">Start Game</button>
+                    <p class="game-hint">Use Arrow Keys or Swipe to Move</p>
+                </div>
+            </div>
+        </section>
+
         <!-- Contact Section -->
         <section id="contact" class="section contact-section">
             <h2 class="section-title">Let's <span class="neon-text">Connect</span></h2>
@@ -839,6 +892,12 @@
                 <input type="text" name="name" placeholder="Your Name" required autocomplete="off">
                 <input type="email" name="email" placeholder="Your Email" required autocomplete="off">
                 <textarea name="message" placeholder="Your Message" required></textarea>
+                
+                <div class="captcha-group" style="display: flex; gap: 1rem; align-items: center;">
+                    <span id="captcha-question" style="color: var(--neon-cyan); font-weight: bold; white-space: nowrap;"></span>
+                    <input type="text" id="captcha-answer" placeholder="Answer?" required style="max-width: 150px;">
+                </div>
+
                 <button type="submit" id="submit-btn" class="btn primary-btn" style="width: 100%; justify-content: center;">Send Message</button>
                 <div id="form-status" class="form-status"></div>
             </form>
@@ -1017,6 +1076,165 @@
             animateParticles();
         }
 
+        // Cyber Snake Game Logic
+        const sCanvas = document.getElementById('snake-canvas');
+        if (sCanvas) {
+            const sCtx = sCanvas.getContext('2d');
+            const box = 20;
+            let snake = [];
+            let food = {};
+            let score = 0;
+            let highScore = localStorage.getItem('snakeHighScore') || 0;
+            let d;
+            let gameLoop;
+
+            document.getElementById('snake-highscore').innerText = highScore;
+
+            function initGame() {
+                snake = [];
+                snake[0] = { x: 9 * box, y: 10 * box };
+                score = 0;
+                d = "RIGHT";
+                document.getElementById('snake-score').innerText = score;
+                generateFood();
+            }
+
+            function generateFood() {
+                food = {
+                    x: Math.floor(Math.random() * 20) * box,
+                    y: Math.floor(Math.random() * 20) * box
+                }
+            }
+
+            document.addEventListener("keydown", direction);
+            
+            let touchStartX = 0;
+            let touchStartY = 0;
+            sCanvas.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+                touchStartY = e.changedTouches[0].screenY;
+            }, {passive: true});
+            sCanvas.addEventListener('touchend', e => {
+                let touchEndX = e.changedTouches[0].screenX;
+                let touchEndY = e.changedTouches[0].screenY;
+                handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
+            }, {passive: true});
+
+            function handleSwipe(startX, startY, endX, endY) {
+                let dx = endX - startX;
+                let dy = endY - startY;
+                if(Math.abs(dx) > Math.abs(dy)) {
+                    if(dx > 0 && d != "LEFT") d = "RIGHT";
+                    else if(dx < 0 && d != "RIGHT") d = "LEFT";
+                } else {
+                    if(dy > 0 && d != "UP") d = "DOWN";
+                    else if(dy < 0 && d != "DOWN") d = "UP";
+                }
+            }
+
+            function direction(event) {
+                let key = event.keyCode;
+                if (key == 37 && d != "RIGHT") d = "LEFT";
+                else if (key == 38 && d != "DOWN") d = "UP";
+                else if (key == 39 && d != "LEFT") d = "RIGHT";
+                else if (key == 40 && d != "UP") d = "DOWN";
+                
+                if([37, 38, 39, 40].includes(key)) {
+                    event.preventDefault();
+                }
+            }
+
+            function collision(head, array) {
+                for (let i = 0; i < array.length; i++) {
+                    if (head.x == array[i].x && head.y == array[i].y) return true;
+                }
+                return false;
+            }
+
+            function draw() {
+                sCtx.fillStyle = "#000";
+                sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
+
+                for (let i = 0; i < snake.length; i++) {
+                    sCtx.fillStyle = (i == 0) ? "#00f3ff" : "rgba(0, 243, 255, 0.5)";
+                    sCtx.fillRect(snake[i].x, snake[i].y, box, box);
+                    sCtx.strokeStyle = "#000";
+                    sCtx.strokeRect(snake[i].x, snake[i].y, box, box);
+                }
+
+                sCtx.fillStyle = "#b53cff";
+                sCtx.shadowBlur = 10;
+                sCtx.shadowColor = "#b53cff";
+                sCtx.fillRect(food.x, food.y, box, box);
+                sCtx.shadowBlur = 0;
+
+                let snakeX = snake[0].x;
+                let snakeY = snake[0].y;
+
+                if (d == "LEFT") snakeX -= box;
+                if (d == "UP") snakeY -= box;
+                if (d == "RIGHT") snakeX += box;
+                if (d == "DOWN") snakeY += box;
+
+                if (snakeX == food.x && snakeY == food.y) {
+                    score++;
+                    document.getElementById('snake-score').innerText = score;
+                    if(score > highScore) {
+                        highScore = score;
+                        localStorage.setItem('snakeHighScore', highScore);
+                        document.getElementById('snake-highscore').innerText = highScore;
+                    }
+                    generateFood();
+                } else {
+                    snake.pop();
+                }
+
+                let newHead = { x: snakeX, y: snakeY };
+
+                if (snakeX < 0 || snakeX >= sCanvas.width || snakeY < 0 || snakeY >= sCanvas.height || collision(newHead, snake)) {
+                    clearInterval(gameLoop);
+                    sCtx.fillStyle = "rgba(0,0,0,0.7)";
+                    sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
+                    sCtx.fillStyle = "#ff0055";
+                    sCtx.font = "30px 'Fira Code'";
+                    sCtx.textAlign = "center";
+                    sCtx.fillText("GAME OVER", sCanvas.width/2, sCanvas.height/2);
+                    document.getElementById('start-game-btn').innerText = "Restart Game";
+                    document.getElementById('start-game-btn').style.display = "inline-block";
+                    return;
+                }
+
+                snake.unshift(newHead);
+            }
+
+            document.getElementById('start-game-btn').addEventListener('click', function() {
+                this.style.display = 'none';
+                initGame();
+                if(gameLoop) clearInterval(gameLoop);
+                gameLoop = setInterval(draw, 100);
+            });
+            
+            sCtx.fillStyle = "#000";
+            sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
+            sCtx.fillStyle = "#00f3ff";
+            sCtx.font = "20px 'Fira Code'";
+            sCtx.textAlign = "center";
+            sCtx.fillText("Press Start to Play", sCanvas.width/2, sCanvas.height/2);
+        }
+
+        // Contact Form Custom Math Captcha
+        let captchaResult;
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            captchaResult = num1 + num2;
+            const questionEl = document.getElementById('captcha-question');
+            if(questionEl) questionEl.innerText = `What is ${num1} + ${num2}?`;
+            const answerEl = document.getElementById('captcha-answer');
+            if(answerEl) answerEl.value = '';
+        }
+        generateCaptcha();
+
         // Contact Form AJAX Submission
         const contactForm = document.getElementById('contact-form');
         const submitBtn = document.getElementById('submit-btn');
@@ -1025,6 +1243,16 @@
         if(contactForm) {
             contactForm.addEventListener('submit', function(e) {
                 e.preventDefault();
+                
+                // Validate Captcha
+                const userAnswer = parseInt(document.getElementById('captcha-answer').value);
+                if(userAnswer !== captchaResult) {
+                    formStatus.innerText = "Incorrect Math Captcha. Are you a bot?";
+                    formStatus.style.color = "var(--neon-purple)";
+                    generateCaptcha();
+                    return;
+                }
+
                 submitBtn.innerText = 'Sending...';
                 submitBtn.disabled = true;
                 formStatus.innerText = '';
