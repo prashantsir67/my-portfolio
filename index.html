@@ -7,6 +7,14 @@
     <meta name="description" content="Portfolio of Prashant Joshi, SEO Executive at Nest Nepal. Specialized in technical SEO, organic growth, and content optimization.">
     <link rel="icon" type="image/png" href="favicon.png">
     
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T6PFLVV8');</script>
+    <!-- End Google Tag Manager -->
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,16 +23,618 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/main.css">
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #13131c;
+            --neon-cyan: #00f3ff;
+            --neon-purple: #b53cff;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --font-sans: 'Outfit', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
 
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-T6PFLVV8');</script>
-    <!-- End Google Tag Manager -->
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Custom Cursor Glow */
+        .cursor-glow {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 243, 255, 0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            mix-blend-mode: screen;
+            transition: width 0.3s, height 0.3s;
+        }
+
+        /* Particles Background */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        /* Utilities */
+        .neon-text {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5), 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .text-neon {
+            color: var(--neon-cyan);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 800;
+        }
+
+        .section {
+            padding: 6rem 10%;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 10%;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px rgba(0, 243, 255, 0.6);
+        }
+
+        .nav-btn {
+            border: 1px solid var(--neon-cyan);
+            padding: 0.5rem 1.2rem;
+            border-radius: 4px;
+            color: var(--neon-cyan) !important;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 100vh;
+            padding: 8rem 10% 4rem;
+            gap: 4rem;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .profile-wrap {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            padding: 5px;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            margin-bottom: 2rem;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+        
+        .profile-wrap:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid var(--bg-dark);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(181, 60, 255, 0.1);
+            border: 1px solid var(--neon-purple);
+            color: var(--neon-purple);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 10px rgba(181, 60, 255, 0.2);
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        .bio {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            margin-top: 1.5rem;
+            max-width: 600px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+        }
+
+        .primary-btn {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+        }
+
+        .primary-btn:hover {
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .primary-btn:disabled {
+            background: #333;
+            color: #888;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .secondary-btn {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--text-muted);
+        }
+
+        .secondary-btn:hover {
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+        }
+
+        .hero-visual {
+            flex: 1;
+        }
+
+        /* Terminal Card */
+        .tech-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px rgba(0, 243, 255, 0.1);
+            font-family: var(--font-mono);
+            transition: transform 0.3s ease;
+        }
+        
+        .tech-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: #1e1e2e;
+            padding: 0.8rem 1rem;
+            font-size: 0.9rem;
+            color: #a6accd;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .prompt {
+            color: var(--neon-purple);
+        }
+
+        .cmd {
+            color: var(--neon-cyan);
+        }
+
+        .output {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            margin-top: 0.3rem;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 18px;
+            background: var(--neon-cyan);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: rgba(0, 243, 255, 0.2);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 3rem;
+            background: var(--bg-card);
+            padding: 2rem 2rem 2rem 60px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+        }
+
+        .timeline-item:hover {
+            border-color: rgba(0, 243, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 14px;
+            top: 2.5rem;
+            width: 14px;
+            height: 14px;
+            background: var(--bg-dark);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .timeline-date {
+            color: var(--neon-purple);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .timeline-content h4 {
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        /* Projects */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 2.5rem;
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+        }
+
+        .project-card:hover {
+            border-color: var(--neon-purple);
+            box-shadow: 0 15px 35px rgba(181, 60, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .project-icon {
+            font-size: 2.5rem;
+            color: var(--neon-cyan);
+            margin-bottom: 1.5rem;
+        }
+
+        .project-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .project-card p {
+            color: var(--text-muted);
+        }
+
+        /* Interactive Widget */
+        .widget-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .widget-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .widget-header {
+            background: rgba(0, 243, 255, 0.05);
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+            text-align: center;
+        }
+
+        .widget-header h3 {
+            color: var(--neon-cyan);
+            font-weight: 600;
+        }
+
+        .widget-body {
+            padding: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+            color: #fff;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--neon-cyan);
+        }
+
+        .results-hidden {
+            display: none;
+        }
+
+        .results-visible {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .progress-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .score {
+            color: var(--neon-cyan);
+            font-family: var(--font-mono);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan));
+            width: 0%;
+            transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .terminal-log {
+            margin-top: 2rem;
+            background: #000;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            height: 150px;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .log-entry {
+            margin-bottom: 0.3rem;
+            color: var(--text-muted);
+        }
+        .log-success { color: #4ade80; }
+        .log-warn { color: #facc15; }
+
+        /* Contact Section */
+        .contact-section {
+            text-align: center;
+        }
+
+        .contact-desc {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 50%;
+            color: #fff;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: rgba(0, 243, 255, 0.1);
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 243, 255, 0.2);
+        }
+
+        .email-btn {
+            font-size: 1.2rem;
+            padding: 1rem 3rem;
+            text-transform: lowercase;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: var(--bg-card);
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 8rem;
+            }
+            
+            .profile-wrap {
+                margin: 0 auto 2rem;
+            }
+            
+            .hero h1 { font-size: 2.5rem; }
+            
+            .hero-actions {
+                justify-content: center;
+            }
+            
+            .nav-links { display: none; }
+            
+            .timeline::before { left: 0; }
+            .timeline-item { padding-left: 30px; }
+            .timeline-dot { left: -6px; }
+            
+            .input-group { flex-direction: column; }
+            .section { padding: 4rem 5%; }
+        }
+    </style>
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->
@@ -52,11 +662,11 @@
         <!-- Hero Section -->
         <section id="about" class="hero">
             <div class="hero-content">
-                <div class="profile-wrap interactive-tilt">
+                <div class="profile-wrap">
                     <img src="prashant.jpg" alt="Prashant Joshi" class="profile-img" onerror="this.src='https://via.placeholder.com/150/13131c/00f3ff?text=PJ'">
                 </div>
                 <div class="badge">SEO Executive @ Nest Nepal</div>
-                <h1 class="glitch" data-text="Dominating Search.">Dominating Search.</h1>
+                <h1>Dominating Search.</h1>
                 <h1 class="neon-text">Scaling Growth.</h1>
                 <p class="bio">
                     I'm <strong>Prashant Joshi</strong>. In just a few months, I've evolved from an ambitious intern to leading SEO strategies as an Executive at Nest Nepal. I specialize in technical SEO, deep content optimization, and engineering organic visibility that converts.
@@ -67,7 +677,7 @@
                 </div>
             </div>
             <div class="hero-visual">
-                <div class="tech-card interactive-tilt">
+                <div class="tech-card">
                     <div class="card-header">
                         <i class="fas fa-terminal"></i> prashant_seo.exe
                     </div>
@@ -88,7 +698,7 @@
         <section id="experience" class="section">
             <h2 class="section-title">My <span class="neon-text">Journey</span></h2>
             <div class="timeline">
-                <div class="timeline-item interactive-tilt">
+                <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-date">June 2025 - Present</div>
                     <div class="timeline-content">
@@ -97,7 +707,7 @@
                         <p>Elevated to an executive role to drive organic search strategies, manage comprehensive technical audits, and implement high-impact content optimizations across major digital assets.</p>
                     </div>
                 </div>
-                <div class="timeline-item interactive-tilt">
+                <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-date">May 10, 2025 - May 31, 2025</div>
                     <div class="timeline-content">
@@ -113,20 +723,20 @@
         <section id="projects" class="section">
             <h2 class="section-title">Key <span class="neon-text">Impacts</span></h2>
             <div class="projects-grid">
-                <div class="project-card interactive-tilt">
+                <div class="project-card">
                     <div class="project-icon"><i class="fas fa-globe"></i></div>
                     <h3>Nest Nepal Core</h3>
                     <p>Spearheaded the complete content optimization for major pages on the Nest Nepal website, significantly improving keyword relevance and search engine understanding.</p>
                 </div>
-                <div class="project-card interactive-tilt">
+                <div class="project-card">
                     <div class="project-icon"><i class="fas fa-comment-sms"></i></div>
                     <h3>Nest SMS</h3>
-                    <p>Developed and executed targeted SEO strategies to boost the visibility of Nest SMS, focusing on localized search intent and conversion rate optimization.</p>
+                    <p>Currently working on targeted SEO strategies to boost the visibility of Nest SMS, focusing on localized search intent and conversion rate optimization.</p>
                 </div>
-                <div class="project-card interactive-tilt">
+                <div class="project-card">
                     <div class="project-icon"><i class="fas fa-server"></i></div>
                     <h3>Babal Host</h3>
-                    <p>Contributed to the search engine optimization of Babal Host, implementing technical enhancements and content refinements to improve organic rankings in the hosting niche.</p>
+                    <p>Contributed to Babal Host by implementing optimized meta tags for specific pages, designed to improve organic click-through rates and search engine visibility.</p>
                 </div>
             </div>
         </section>
@@ -134,7 +744,7 @@
         <!-- Interactive Widget Section -->
         <section id="interactive" class="section">
             <h2 class="section-title">Interactive <span class="neon-text">SEO Analyzer</span></h2>
-            <div class="widget-container interactive-tilt">
+            <div class="widget-container">
                 <div class="widget-header">
                     <h3><i class="fas fa-magnifying-glass-chart"></i> Live Page Audit Simulator</h3>
                 </div>
@@ -182,8 +792,173 @@
         <p>&copy; 2026 Prashant Joshi. All rights reserved. | Engineered for Organic Growth.</p>
     </footer>
 
-    <!-- Scripts -->
-    <script src="js/particles.min.js"></script>
-    <script src="js/portfolio.js"></script>
+    <!-- Interactive Scripts -->
+    <script>
+        // Cursor Glow Effect
+        document.addEventListener('mousemove', (e) => {
+            const cursor = document.querySelector('.cursor-glow');
+            if (cursor) {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            }
+        });
+
+        // Interactive SEO Analyzer Widget
+        const analyzeBtn = document.getElementById('analyze-btn');
+        const targetUrlInput = document.getElementById('target-url');
+        const resultsDiv = document.getElementById('analysis-results');
+        const auditLog = document.getElementById('audit-log');
+
+        const scores = {
+            tech: document.getElementById('score-tech'),
+            onpage: document.getElementById('score-onpage'),
+            perf: document.getElementById('score-perf')
+        };
+
+        const fills = {
+            tech: document.getElementById('fill-tech'),
+            onpage: document.getElementById('fill-onpage'),
+            perf: document.getElementById('fill-perf')
+        };
+
+        const logs = [
+            "Initializing crawler engine...",
+            "[INFO] Resolving DNS and establishing secure connection.",
+            "[WARN] Scanning robots.txt - found 2 disallow directives.",
+            "Checking XML sitemap integrity...",
+            "[SUCCESS] Sitemap validated (1,240 URLs).",
+            "Analyzing DOM structure and semantic HTML...",
+            "[SUCCESS] H1-H6 hierarchy is strictly maintained.",
+            "Evaluating Core Web Vitals (LCP, FID, CLS)...",
+            "Extracting schema.org JSON-LD structured data...",
+            "[INFO] Found BreadcrumbList and Organization schemas.",
+            "Calculating keyword density and TF-IDF scores...",
+            "[SUCCESS] Analysis complete. Compiling final metrics."
+        ];
+
+        if(analyzeBtn) {
+            analyzeBtn.addEventListener('click', () => {
+                if(!targetUrlInput.value) {
+                    alert("Please enter a URL to analyze.");
+                    return;
+                }
+                
+                resultsDiv.className = 'results-visible';
+                auditLog.innerHTML = '';
+                
+                Object.keys(fills).forEach(key => {
+                    fills[key].style.width = '0%';
+                    scores[key].innerText = '0%';
+                });
+
+                analyzeBtn.disabled = true;
+                analyzeBtn.innerText = "Analyzing...";
+
+                let logIndex = 0;
+                const logInterval = setInterval(() => {
+                    if(logIndex < logs.length) {
+                        const p = document.createElement('div');
+                        p.className = 'log-entry';
+                        let text = logs[logIndex];
+                        if(text.includes('[SUCCESS]')) p.classList.add('log-success');
+                        if(text.includes('[WARN]')) p.classList.add('log-warn');
+                        
+                        p.innerText = `> ${text}`;
+                        auditLog.appendChild(p);
+                        auditLog.scrollTop = auditLog.scrollHeight;
+                        logIndex++;
+                    } else {
+                        clearInterval(logInterval);
+                        
+                        animateScore('tech', 94);
+                        animateScore('onpage', 88);
+                        animateScore('perf', 92);
+                        
+                        analyzeBtn.disabled = false;
+                        analyzeBtn.innerText = "Analyze";
+                    }
+                }, 400);
+            });
+        }
+
+        function animateScore(key, target) {
+            let current = 0;
+            fills[key].style.width = `${target}%`;
+            
+            const counter = setInterval(() => {
+                if(current >= target) {
+                    clearInterval(counter);
+                    scores[key].innerText = `${target}%`;
+                } else {
+                    current += 2;
+                    if(current > target) current = target;
+                    scores[key].innerText = `${current}%`;
+                }
+            }, 30);
+        }
+
+        // Particle Background Logic
+        const canvas = document.createElement('canvas');
+        const container = document.getElementById('particles-js');
+        if(container) {
+            container.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+
+            let width, height, particles = [];
+
+            function initParticles() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+                particles = [];
+                for(let i=0; i<80; i++) {
+                    particles.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        size: Math.random() * 2
+                    });
+                }
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.fillStyle = 'rgba(0, 243, 255, 0.5)';
+                
+                particles.forEach((p, index) => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    
+                    if(p.x < 0 || p.x > width) p.vx *= -1;
+                    if(p.y < 0 || p.y > height) p.vy *= -1;
+                    
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    for(let j=index+1; j<particles.length; j++) {
+                        const p2 = particles[j];
+                        const dx = p.x - p2.x;
+                        const dy = p.y - p2.y;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        
+                        if(dist < 100) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(0, 243, 255, ${0.2 - dist/500})`;
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
+                });
+                
+                requestAnimationFrame(animateParticles);
+            }
+
+            window.addEventListener('resize', initParticles);
+            initParticles();
+            animateParticles();
+        }
+    </script>
 </body>
 </html>
