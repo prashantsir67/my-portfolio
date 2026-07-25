@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prashant Joshi | SEO Architect & Growth Strategist</title>
+    <meta name="description" content="Portfolio of Prashant Joshi — SEO Architect & Intern at Nest Nepal. Specialized in technical SEO, on-page optimization, and organic growth strategies.">
+    <meta name="keywords" content="Prashant Joshi, SEO Architect, Nest Nepal, Kathmandu SEO, Technical SEO, Patan Multiple Campus">
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://prashant-joshi.com.np/">
+    <meta property="og:title" content="Prashant Joshi | SEO Architect & Growth Strategist">
+    <meta property="og:description" content="Technical SEO optimization engine by Prashant Joshi. Specialized in organic growth, technical audits, and on-page excellence.">
+    <meta property="og:image" content="https://prashant-joshi.com.np/prashant.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://prashant-joshi.com.np/">
+    <meta property="twitter:title" content="Prashant Joshi | SEO Architect & Growth Strategist">
+    <meta property="twitter:description" content="SEO optimization dashboard by Prashant Joshi.">
+    <meta property="twitter:image" content="https://prashant-joshi.com.np/prashant.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+    <!-- Custom Cursor -->
+    <div id="custom-cursor"></div>
+    <div id="custom-cursor-ring"></div>
+    <div id="custom-cursor-glow"></div>
+
+    <!-- Scanner line -->
+    <div class="scanner-effect"></div>
+
+    <!-- Scroll Progress Bar -->
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 3px; z-index: 2000; pointer-events: none;">
+        <div id="scroll-progress-bar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #00f2ff, #7000ff); transition: width 0.1s ease-out; box-shadow: 0 0 8px #00f2ff;"></div>
+    </div>
+
+    <!-- Football Scoreboard (hidden until goal) -->
+    <div id="football-scoreboard">
+        <span class="sb-emoji">⚽</span>
+        <div class="sb-content">
+            <span class="sb-label">Goals Scored</span>
+            <span id="sb-score">0</span>
+        </div>
+        <button class="sb-close-btn" id="sb-close-btn" title="Close (ESC)">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Football Physics Canvas (fullscreen overlay, bouncing ball) -->
+    <canvas id="football-overlay-canvas" class="ball-active"></canvas>
+
+    <!-- Hint pill (auto-fades) -->
+    <div class="sb-hint" id="ball-hint">
+        <i class="fas fa-futbol"></i>
+        Drag the football anywhere on screen &amp; shoot into the goal post! ⚽
+    </div>
+
+    <!-- Particle Background -->
+    <canvas id="bg-canvas"></canvas>
+    <div class="cyber-grid"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="logo-container">
+            <a href="#" class="logo">PRASHANT<span>JOSHI</span></a>
+        </div>
+        <div class="nav-links">
+            <a href="#about" class="active">About</a>
+            <a href="#bento-metrics">Dashboard</a>
+            <a href="#seo-calculator">SEO Tool</a>
+            <a href="#experience">Timeline</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <div class="nav-actions">
+            <button id="theme-toggle-btn" class="theme-toggle-btn" title="Toggle Theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+
+        <!-- Hero Section -->
+        <header id="about" class="hero-section">
+            <div class="hero-content" data-cyber-reveal>
+                <div class="hero-badge">
+                    <span class="pulse-dot"></span>
+                    SEO Core Engine — Online
+                </div>
+                <div class="hero-profile-container">
+                    <div class="hero-profile-frame">
+                        <!-- Fixed: correct filename is prashant.jpg -->
+                        <img src="prashant.jpg" alt="Prashant Joshi" class="hero-profile-img"
+                             onerror="this.style.background='linear-gradient(135deg,#00f2ff,#7000ff)'; this.style.borderRadius='26px';">
+                    </div>
+                    <div class="hero-profile-text">
+                        <h2>Prashant Joshi</h2>
+                        <p>Kathmandu, Nepal</p>
+                    </div>
+                </div>
+                <h1 class="hero-title">Dominating Search<br><span class="gradient-text-accent">With Precision.</span></h1>
+                <p class="hero-description">
+                    SEO Architect &amp; Growth Strategist — currently interning at <strong>Nest Nepal</strong>. Driving organic visibility through technical audits, on-page excellence, and keyword dominance.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn-primary">Start Site Audit</a>
+                    <a href="#bento-metrics" class="btn-outline">View Dashboard</a>
+                </div>
+            </div>
+
+            <!-- Interactive Terminal -->
+            <div class="hero-visual" data-cyber-reveal>
+                <div class="cyber-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-buttons">
+                            <span class="terminal-btn red"></span>
+                            <span class="terminal-btn yellow"></span>
+                            <span class="terminal-btn green"></span>
+                        </div>
+                        <div class="terminal-title">prashant@cyber-node:~</div>
+                    </div>
+                    <div id="terminal-body" class="terminal-body">
+                        <div class="terminal-history" id="terminal-history">
+                            <div><span class="terminal-prompt">$</span> status --active</div>
+                            <div class="terminal-log-output">System Active. SEO Engine Running.</div>
+                            <div><span class="terminal-prompt">$</span> internship --current</div>
+                            <div class="terminal-log-output terminal-log-success">Nest Nepal SEO Intern — Since 10 May 2026</div>
+                            <div><span class="terminal-prompt">$</span> gsc --report</div>
+                            <div class="terminal-log-output">+4,000 Organic Impressions | 10+ Top-10 Keywords</div>
+                            <div><span class="terminal-prompt">$</span> _</div>
+                            <div class="terminal-log-output">Type "help" for available commands.</div>
+                        </div>
+                        <div class="terminal-input-line">
+                            <span class="terminal-prompt">$</span>
+                            <input type="text" id="terminal-input" class="terminal-input-field" placeholder="enter command..." autocomplete="off" spellcheck="false">
+                        </div>
+                    </div>
+                </div>
+                <div class="scroll-hint">
+                    <span>Explore</span>
+                    <div class="scroll-indicator"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Bento Dashboard -->
+        <section id="bento-metrics" class="bento-section" data-cyber-reveal>
+            <div class="section-header">
+                <span class="section-tag">Cyber Metrics</span>
+                <h2 class="section-title">Operations <span class="gradient-text-accent">Dashboard</span></h2>
+            </div>
+
+            <div class="bento-grid-dashboard">
+
+                <!-- Nest Nepal Live Internship Counter — HERO CARD -->
+                <div class="bento-card bento-col-2 bento-row-2">
+                    <span class="card-badge">LIVE</span>
+                    <div class="internship-counter-container">
+                        <div class="internship-header">
+                            <div>
+                                <h4>Nest Nepal Internship</h4>
+                                <p style="margin-top:4px;font-size:0.82rem;color:var(--text-secondary);">SEO Strategist &amp; Technical Auditor — Since 10 May 2026</p>
+                            </div>
+                            <p>ACTIVE</p>
+                        </div>
+
+                        <div class="internship-timer-grid">
+                            <div class="timer-box">
+                                <div id="internship-years" class="timer-num">00</div>
+                                <div class="timer-lbl">Years</div>
+                            </div>
+                            <div class="timer-box">
+                                <div id="internship-months" class="timer-num">00</div>
+                                <div class="timer-lbl">Months</div>
+                            </div>
+                            <div class="timer-box">
+                                <div id="internship-days" class="timer-num">00</div>
+                                <div class="timer-lbl">Days</div>
+                            </div>
+                            <div class="timer-box">
+                                <div id="internship-hours" class="timer-num">00</div>
+                                <div class="timer-lbl">Hours</div>
+                            </div>
+                        </div>
+
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+                            <div class="timer-box">
+                                <div id="internship-minutes" class="timer-num">00</div>
+                                <div class="timer-lbl">Mins</div>
+                            </div>
+                            <div class="timer-box">
+                                <div id="internship-seconds" class="timer-num">00</div>
+                                <div class="timer-lbl">Secs</div>
+                            </div>
+                        </div>
+
+                        <div class="internship-progress-bar-wrap">
+                            <div id="internship-progress-bar" class="internship-progress-bar"></div>
+                        </div>
+
+                        <div class="internship-footer">
+                            <i class="fas fa-circle"></i>
+                            <span id="internship-live-counter-text">Loading elapsed time...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GSC Analytics -->
+                <div class="bento-card bento-col-2 bento-row-2">
+                    <span class="card-badge">SEO ANALYTICS</span>
+                    <div class="analytics-dashboard">
+                        <div class="analytics-header">
+                            <h4 style="font-family:var(--font-heading);font-weight:700;">Organic Traffic Curve</h4>
+                            <div class="analytics-tabs">
+                                <button class="analytics-tab active">28D</button>
+                                <button class="analytics-tab">3M</button>
+                            </div>
+                        </div>
+                        <div class="gsc-stat-grid">
+                            <div class="gsc-stat-item">
+                                <div class="gsc-stat-label">Impressions</div>
+                                <div class="gsc-stat-val">+4.0K</div>
+                                <div class="gsc-stat-trend up"><i class="fas fa-caret-up"></i> +12.4%</div>
+                            </div>
+                            <div class="gsc-stat-item">
+                                <div class="gsc-stat-label">Clicks</div>
+                                <div class="gsc-stat-val">320</div>
+                                <div class="gsc-stat-trend up"><i class="fas fa-caret-up"></i> +8.2%</div>
+                            </div>
+                            <div class="gsc-stat-item">
+                                <div class="gsc-stat-label">Avg Position</div>
+                                <div class="gsc-stat-val">4.2</div>
+                                <div class="gsc-stat-trend up"><i class="fas fa-caret-up"></i> +0.6</div>
+                            </div>
+                        </div>
+                        <div class="mock-chart-container">
+                            <svg viewBox="0 0 300 100" class="mock-chart-svg">
+                                <defs>
+                                    <linearGradient id="chart-gradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#00f2ff" stop-opacity="0.3"></stop>
+                                        <stop offset="100%" stop-color="#00f2ff" stop-opacity="0"></stop>
+                                    </linearGradient>
+                                </defs>
+                                <path class="area" d="M 0,100 L 0,80 Q 30,65 60,70 T 120,40 T 180,55 T 240,20 T 300,10 L 300,100 Z"></path>
+                                <path class="line" d="M 0,80 Q 30,65 60,70 T 120,40 T 180,55 T 240,20 T 300,10"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BCA Academic Card -->
+                <div class="bento-card bento-col-2">
+                    <span class="card-badge">ACADEMICS</span>
+                    <div class="bento-card-content">
+                        <i class="fas fa-graduation-cap card-icon"></i>
+                        <h3 class="card-title">BCA Undergraduate</h3>
+                        <p class="card-description">Patan Multiple Campus · 2022 – Present. Combining CS fundamentals with real-world SEO application.</p>
+                    </div>
+                </div>
+
+                <!-- Keyword Rankings Card -->
+                <div class="bento-card bento-col-2">
+                    <span class="card-badge">RANKINGS</span>
+                    <div class="bento-card-content">
+                        <i class="fas fa-arrow-trend-up card-icon"></i>
+                        <h3 class="card-title">10+ Top-10 Keywords</h3>
+                        <p class="card-description">Consistently driving high-value keywords to Page 1 of Google search results.</p>
+                    </div>
+                </div>
+
+                <!-- Fitness Card -->
+                <div class="bento-card">
+                    <span class="card-badge">LIFESTYLE</span>
+                    <div class="bento-card-content">
+                        <i class="fas fa-dumbbell card-icon" style="color:var(--accent-tertiary);"></i>
+                        <h3 class="card-title" style="font-size:1.3rem;">Fitness</h3>
+                        <p class="card-description">Discipline-first mindset. Consistency in gym translates to consistency in SEO.</p>
+                    </div>
+                </div>
+
+                <!-- Travel Card -->
+                <div class="bento-card">
+                    <span class="card-badge">EXPLORING</span>
+                    <div class="bento-card-content">
+                        <i class="fas fa-route card-icon"></i>
+                        <h3 class="card-title" style="font-size:1.3rem;">Travelling</h3>
+                        <p class="card-description">Exploring Nepal's trails and mountains for inspiration.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SEO Analyzer Tool -->
+        <section id="seo-calculator" class="seo-toolkit-section" data-cyber-reveal>
+            <div class="section-header">
+                <span class="section-tag">Dev Engine</span>
+                <h2 class="section-title">Technical SEO <span class="gradient-text-accent">Analyzer</span></h2>
+            </div>
+
+            <div class="seo-grid">
+                <div class="seo-card-tool">
+                    <div class="seo-tool-header">
+                        <h3 class="seo-tool-title">Site Crawler</h3>
+                        <p class="seo-tool-desc">Test load vectors, metadata integrity, and layout responsiveness metrics.</p>
+                    </div>
+                    <div class="seo-tool-body">
+                        <div class="tool-input-group">
+                            <label class="tool-label">Target Domain URL</label>
+                            <input type="url" id="seo-url-input" class="tool-input" placeholder="https://example.com" value="https://nestnepal.com">
+                        </div>
+                        <div class="tool-input-group">
+                            <label class="tool-label">Focus Keyword</label>
+                            <input type="text" id="seo-keyword-input" class="tool-input" placeholder="e.g. web hosting nepal" value="web hosting nepal">
+                        </div>
+                        <div class="tool-input-group">
+                            <label class="tool-label">Audit Level</label>
+                            <select id="seo-strictness" class="tool-input tool-select">
+                                <option>Standard — Core parameters</option>
+                                <option>Strict — Core Web Vitals check</option>
+                                <option>Deep — NLP entity matching</option>
+                            </select>
+                        </div>
+                        <button id="btn-seo-audit" class="btn-tool-calculate">LAUNCH FULL AUDIT</button>
+                    </div>
+                </div>
+
+                <div class="seo-card-tool">
+                    <div class="seo-tool-header">
+                        <h3 class="seo-tool-title">Audit Results</h3>
+                        <p class="seo-tool-desc">Simulated technical crawl outputs based on your URL.</p>
+                    </div>
+                    <div id="seo-audit-results" class="seo-tool-results active">
+                        <div class="results-grid">
+                            <div class="result-item">
+                                <div class="result-label">Core Web Vitals</div>
+                                <div id="res-speed" class="result-value high-score">94/100</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">On-Page Score</div>
+                                <div id="res-onpage" class="result-value high-score">88/100</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">Mobile Score</div>
+                                <div id="res-mobile" class="result-value">92/100</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">Load Time</div>
+                                <div id="res-loadtime" class="result-value high-score">0.82s</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">Schema Markup</div>
+                                <div id="res-schema" class="result-value high-score">A+</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">Indexed Pages</div>
+                                <div id="res-pages" class="result-value">340</div>
+                            </div>
+                        </div>
+                        <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px dashed var(--card-border);">
+                            <h5 style="color:var(--accent-primary);font-size:0.85rem;margin-bottom:0.5rem;">RECOMMENDATIONS:</h5>
+                            <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.5;">
+                                URL resolves securely. Robots.txt configured correctly. Meta titles match keyword density targets. Next step: Compress remaining asset payloads to reduce FID further.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Professional Timeline -->
+        <section id="experience" class="experience-section" data-cyber-reveal>
+            <div class="section-header">
+                <span class="section-tag">Proof of Capability</span>
+                <h2 class="section-title">Professional <span class="gradient-text-accent">Chronology</span></h2>
+            </div>
+
+            <div class="timeline-container">
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-meta">
+                        <span class="timeline-date">May 2026 – Present</span>
+                        <span class="timeline-company">NEST NEPAL · Kathmandu</span>
+                    </div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">SEO Intern</h3>
+                        <p style="color:var(--text-secondary);">Driving organic visibility through structured technical and on-page SEO workflows.</p>
+                        <ul class="timeline-list">
+                            <li>Technical page optimization boosting overall crawl efficiency.</li>
+                            <li>Schema structured data implementation across core product landing pages.</li>
+                            <li>Ahrefs / Semrush backlink monitoring and outreach coordination.</li>
+                            <li>Meta title &amp; description audit driving a 14%+ CTR increase.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-meta">
+                        <span class="timeline-date">2024 – 2025</span>
+                        <span class="timeline-company">Independent SEO Practitioner</span>
+                    </div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">SEO Specialist (Freelance)</h3>
+                        <p style="color:var(--text-secondary);">Designed keyword-optimized SEO architectures for localized businesses.</p>
+                        <ul class="timeline-list">
+                            <li>Ranked 10+ high-competition keywords in Top 10 positions.</li>
+                            <li>30% increase in organic impressions through strategic content optimization.</li>
+                            <li>Core Web Vitals audits reducing LCP and CLS significantly.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-meta">
+                        <span class="timeline-date">2022 – Present</span>
+                        <span class="timeline-company">Patan Multiple Campus</span>
+                    </div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Bachelor of Computer Applications (BCA)</h3>
+                        <p style="color:var(--text-secondary);">Building strong foundations in computer science, databases, and web technologies.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section" data-cyber-reveal>
+            <div class="section-header">
+                <span class="section-tag">Direct Comms</span>
+                <h2 class="section-title">Launch <span class="gradient-text-accent">Transmission</span></h2>
+            </div>
+
+            <div class="contact-layout">
+                <div class="contact-info">
+                    <div class="contact-card-box">
+                        <div class="contact-icon-wrap"><i class="fas fa-phone"></i></div>
+                        <div class="contact-details">
+                            <h5>Mobile</h5>
+                            <p><a href="tel:+9779868797135">+977 9868797135</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-card-box">
+                        <div class="contact-icon-wrap"><i class="fas fa-envelope"></i></div>
+                        <div class="contact-details">
+                            <h5>Email</h5>
+                            <p><a href="mailto:joshiprashant9835@gmail.com">joshiprashant9835@gmail.com</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-card-box">
+                        <div class="contact-icon-wrap"><i class="fas fa-location-dot"></i></div>
+                        <div class="contact-details">
+                            <h5>Location</h5>
+                            <p>Kathmandu, Nepal</p>
+                        </div>
+                    </div>
+                    <div class="contact-card-box">
+                        <div class="contact-icon-wrap"><i class="fas fa-briefcase"></i></div>
+                        <div class="contact-details">
+                            <h5>Current Role</h5>
+                            <p>SEO Intern · Nest Nepal</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="cyber-form" onsubmit="event.preventDefault(); this.querySelector('.btn-submit').textContent='Message Sent! ✓'; setTimeout(()=>this.querySelector('.btn-submit').innerHTML='TRANSMIT SECURE DATA <i class=\'fas fa-paper-plane\'></i>', 2500);">
+                    <div class="form-row">
+                        <div class="cyber-input-wrap">
+                            <label class="cyber-label">Your Name</label>
+                            <input type="text" class="cyber-input" placeholder="e.g. John Doe" required>
+                        </div>
+                        <div class="cyber-input-wrap">
+                            <label class="cyber-label">Email Address</label>
+                            <input type="email" class="cyber-input" placeholder="e.g. john@example.com" required>
+                        </div>
+                    </div>
+                    <div class="cyber-input-wrap">
+                        <label class="cyber-label">Subject</label>
+                        <input type="text" class="cyber-input" placeholder="e.g. SEO Audit Request" required>
+                    </div>
+                    <div class="cyber-input-wrap">
+                        <label class="cyber-label">Message</label>
+                        <textarea class="cyber-input cyber-textarea" placeholder="Tell me about your project..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">
+                        TRANSMIT SECURE DATA <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <a href="#" class="footer-logo">PRASHANT<span>JOSHI</span></a>
+        <div class="footer-socials">
+            <a href="https://www.linkedin.com/in/prashant-joshi7" target="_blank" class="footer-social-link" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://www.facebook.com/prashantjoshi12345/" target="_blank" class="footer-social-link" title="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.instagram.com/prashant.mnr/" target="_blank" class="footer-social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://github.com" target="_blank" class="footer-social-link" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://wa.me/9779868797135" target="_blank" class="footer-social-link" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <p class="footer-text">&copy; 2026 Prashant Joshi. All rights reserved.</p>
+    </footer>
+
+    <script src="js/particles.js"></script>
+    <script src="js/ball.js"></script>
+    <script src="js/portfolio.js"></script>
+</body>
+</html>
