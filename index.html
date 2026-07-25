@@ -599,6 +599,50 @@
             text-transform: lowercase;
         }
 
+        .contact-form {
+            max-width: 600px;
+            margin: 3rem auto 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            text-align: left;
+            background: var(--bg-card);
+            padding: 2.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+            color: #fff;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .contact-form input:focus, .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+
+        .contact-form textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .form-status {
+            text-align: center;
+            font-weight: 600;
+            margin-top: 1rem;
+            min-height: 24px;
+        }
+
         footer {
             text-align: center;
             padding: 2rem;
@@ -785,7 +829,19 @@
                 <a href="https://www.instagram.com/prashant.mnr/" target="_blank" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
                 <a href="mailto:joshiprashant9835@gmail.com" class="social-link" title="Email"><i class="fas fa-envelope"></i></a>
             </div>
-            <a href="mailto:joshiprashant9835@gmail.com" class="btn primary-btn email-btn">joshiprashant9835@gmail.com</a>
+            
+            <form id="contact-form" class="contact-form">
+                <!-- FormSubmit config -->
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_subject" value="New Portfolio Contact Message!">
+                <input type="hidden" name="_template" value="table">
+                
+                <input type="text" name="name" placeholder="Your Name" required autocomplete="off">
+                <input type="email" name="email" placeholder="Your Email" required autocomplete="off">
+                <textarea name="message" placeholder="Your Message" required></textarea>
+                <button type="submit" id="submit-btn" class="btn primary-btn" style="width: 100%; justify-content: center;">Send Message</button>
+                <div id="form-status" class="form-status"></div>
+            </form>
         </section>
     </main>
 
@@ -959,6 +1015,46 @@
             window.addEventListener('resize', initParticles);
             initParticles();
             animateParticles();
+        }
+
+        // Contact Form AJAX Submission
+        const contactForm = document.getElementById('contact-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const formStatus = document.getElementById('form-status');
+
+        if(contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitBtn.innerText = 'Sending...';
+                submitBtn.disabled = true;
+                formStatus.innerText = '';
+                
+                const formData = new FormData(contactForm);
+                
+                fetch("https://formsubmit.co/ajax/joshiprashant9835@gmail.com", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        formStatus.innerText = "Message sent successfully! I'll get back to you soon.";
+                        formStatus.style.color = "var(--neon-cyan)";
+                        contactForm.reset();
+                    } else {
+                        formStatus.innerText = "Oops! Something went wrong.";
+                        formStatus.style.color = "var(--neon-purple)";
+                    }
+                    submitBtn.innerText = 'Send Message';
+                    submitBtn.disabled = false;
+                })
+                .catch(error => {
+                    formStatus.innerText = "Error sending message. Please try again.";
+                    formStatus.style.color = "var(--neon-purple)";
+                    submitBtn.innerText = 'Send Message';
+                    submitBtn.disabled = false;
+                });
+            });
         }
     </script>
 </body>
