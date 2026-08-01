@@ -514,6 +514,14 @@
             color: var(--primary);
             margin-bottom: 1.5rem;
             border: 1px solid rgba(0, 240, 255, 0.2);
+            overflow: hidden;
+        }
+        .project-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 8px;
+            border-radius: 12px;
         }
 
         .project-card h3 {
@@ -857,6 +865,38 @@
                 display: none; /* In a real app, add a hamburger menu here */
             }
         }
+        /* ------------------ SERP PREVIEW TOOL ------------------ */
+        .serp-header-tools { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .serp-mode-toggle { display: flex; gap: 0.5rem; background: rgba(0,0,0,0.5); padding: 0.3rem; border-radius: 8px; border: 1px solid var(--glass-border); }
+        .mode-btn { background: transparent; border: none; color: var(--text-muted); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .mode-btn.active { background: var(--primary); color: #000; box-shadow: 0 0 10px rgba(0,240,255,0.3); }
+        .serp-container {
+            background: #fff; padding: 24px; border-radius: 12px; font-family: Arial, sans-serif;
+            max-width: 650px; margin: 2rem auto; box-shadow: 0 4px 12px rgba(0,0,0,0.2); text-align: left; transition: max-width 0.3s ease;
+        }
+        .serp-container.mobile-view { max-width: 375px; } /* Mobile limit */
+        .serp-url { color: #202124; font-size: 14px; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
+        .serp-url cite { font-style: normal; }
+        .serp-title { color: #1a0dab; font-size: 20px; line-height: 1.3; cursor: pointer; text-decoration: none; margin-bottom: 3px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .serp-title:hover { text-decoration: underline; }
+        .serp-desc {
+            color: #4d5156; font-size: 14px; line-height: 1.58; word-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .mobile-view .serp-desc { -webkit-line-clamp: 3; } /* Mobile often shows slightly more lines but narrower */
+        .serp-inputs { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem; text-align: left; }
+        .serp-input-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .serp-input-group label { font-size: 0.95rem; color: var(--text-main); display: flex; justify-content: space-between; font-weight: 600; }
+        .serp-limit { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 400; }
+        .serp-limit.perfect { color: #4ade80; }
+        .serp-limit.danger { color: #ff5f56; }
+        .input-row { display: flex; gap: 0.5rem; }
+        .serp-input-group input, .serp-input-group textarea {
+            background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); color: #fff; padding: 12px; border-radius: 6px; font-family: var(--font-display); font-size: 1rem; width: 100%; transition: var(--transition-smooth);
+        }
+        .serp-input-group input:focus, .serp-input-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 10px rgba(0,240,255,0.1); background: rgba(0,240,255,0.02); }
+        .serp-input-group textarea { resize: vertical; min-height: 80px; }
+        .fetch-btn { padding: 0 1.5rem; background: var(--tertiary); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; white-space: nowrap; }
+        .fetch-btn:hover { background: #8a2be2; box-shadow: 0 0 15px rgba(112,0,255,0.4); }
     </style>
 </head>
 <body>
@@ -904,7 +944,7 @@
         <div class="hero-visual">
             <div class="profile-card" id="profile-card">
                 <div class="profile-image-container">
-                    <img src="prashant.jpg" alt="Prashant Joshi" class="profile-img" onerror="this.src='https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80'">
+                    <img src="prashant.png" alt="Prashant Joshi" class="profile-img" onerror="this.src='https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80'">
                 </div>
                 <div class="floating-badge badge-1 glass-panel">
                     <i class="fas fa-chart-line"></i>
@@ -934,7 +974,7 @@
         <div class="grid-layout">
             <div class="project-card glass-panel reveal hover-target">
                 <div>
-                    <div class="project-icon"><i class="fas fa-server"></i></div>
+                    <div class="project-icon"><img src="nestnepal.png" alt="Nest Nepal"></div>
                     <h3>Nest Nepal Core</h3>
                     <p>Spearheaded the complete technical and content optimization for major pages, dramatically improving keyword relevance and indexation speed.</p>
                 </div>
@@ -947,7 +987,7 @@
             
             <div class="project-card glass-panel reveal hover-target" style="transition-delay: 100ms;">
                 <div>
-                    <div class="project-icon"><i class="fas fa-comment-sms"></i></div>
+                    <div class="project-icon"><img src="nestsms.png" alt="Nest SMS"></div>
                     <h3>Nest SMS Localized</h3>
                     <p>Engineered targeted SEO strategies focusing on localized search intent and conversion rate optimization for enterprise SMS solutions.</p>
                 </div>
@@ -960,7 +1000,7 @@
             
             <div class="project-card glass-panel reveal hover-target" style="transition-delay: 200ms;">
                 <div>
-                    <div class="project-icon"><i class="fas fa-database"></i></div>
+                    <div class="project-icon"><img src="babal.png" alt="Babal Host"></div>
                     <h3>Babal Host Audits</h3>
                     <p>Executed comprehensive site audits and implemented optimized meta-structures designed to surge organic click-through rates.</p>
                 </div>
@@ -1049,6 +1089,51 @@
                     </div>
                     <br>
                     <div class="output-line" style="color:var(--primary)">> Recommendation: Hire Prashant to fix these metrics.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERP Preview Section -->
+    <section id="serp-tool">
+        <div class="section-header reveal">
+            <h2 class="text-gradient">SERP Pixel Simulator</h2>
+            <p>Write metadata that perfectly fits Google's pixel limits. See it live.</p>
+        </div>
+        <div class="glass-panel reveal hover-target" style="padding: 3rem; max-width: 900px; margin: 0 auto;">
+            
+            <div class="serp-header-tools">
+                <span style="color:var(--text-muted); font-size:0.9rem;">Live Preview</span>
+                <div class="serp-mode-toggle">
+                    <button class="mode-btn active" id="mode-desktop" title="Desktop View"><i class="fas fa-desktop"></i></button>
+                    <button class="mode-btn" id="mode-mobile" title="Mobile View"><i class="fas fa-mobile-alt"></i></button>
+                </div>
+            </div>
+
+            <div class="serp-container" id="serp-box">
+                <div class="serp-url">
+                    <img src="favicon.png" width="16" height="16" style="border-radius:50%" onerror="this.style.display='none'" id="preview-favicon">
+                    <cite id="preview-url">prashant-joshi.com.np</cite> <span>⋮</span>
+                </div>
+                <a href="#" class="serp-title" id="preview-title">Prashant Joshi | SEO Executive & Digital Growth Specialist</a>
+                <div class="serp-desc" id="preview-desc">Portfolio of Prashant Joshi, SEO Executive at Nest Nepal. Specialized in technical SEO, organic growth, and content optimization.</div>
+            </div>
+            
+            <div class="serp-inputs">
+                <div class="serp-input-group">
+                    <label>URL / Slug to Fetch</label>
+                    <div class="input-row">
+                        <input type="text" id="input-url" value="https://prashant-joshi.com.np" placeholder="https://example.com">
+                        <button class="fetch-btn" id="fetch-btn"><i class="fas fa-bolt"></i> Fetch</button>
+                    </div>
+                </div>
+                <div class="serp-input-group">
+                    <label>Meta Title <span id="title-stats" class="serp-limit perfect">0px / 600px (0 chars)</span></label>
+                    <input type="text" id="input-title" value="Prashant Joshi | SEO Executive & Digital Growth Specialist">
+                </div>
+                <div class="serp-input-group">
+                    <label>Meta Description <span id="desc-stats" class="serp-limit perfect">0px / 920px (0 chars)</span></label>
+                    <textarea id="input-desc">Portfolio of Prashant Joshi, SEO Executive at Nest Nepal. Specialized in technical SEO, organic growth, and content optimization.</textarea>
                 </div>
             </div>
         </div>
@@ -1254,6 +1339,140 @@
                 }, 2000);
             }, 100);
         }
+        // SERP Simulator & Fetch Logic
+        const inputUrl = document.getElementById('input-url');
+        const inputTitle = document.getElementById('input-title');
+        const inputDesc = document.getElementById('input-desc');
+        const fetchBtn = document.getElementById('fetch-btn');
+        
+        const previewUrl = document.getElementById('preview-url');
+        const previewTitle = document.getElementById('preview-title');
+        const previewDesc = document.getElementById('preview-desc');
+        const previewFavicon = document.getElementById('preview-favicon');
+        const serpBox = document.getElementById('serp-box');
+        
+        const titleStats = document.getElementById('title-stats');
+        const descStats = document.getElementById('desc-stats');
+
+        const btnDesktop = document.getElementById('mode-desktop');
+        const btnMobile = document.getElementById('mode-mobile');
+        
+        let isMobile = false;
+
+        btnDesktop.addEventListener('click', () => {
+            isMobile = false;
+            btnDesktop.classList.add('active');
+            btnMobile.classList.remove('active');
+            serpBox.classList.remove('mobile-view');
+            updateSerp();
+        });
+
+        btnMobile.addEventListener('click', () => {
+            isMobile = true;
+            btnMobile.classList.add('active');
+            btnDesktop.classList.remove('active');
+            serpBox.classList.add('mobile-view');
+            updateSerp();
+        });
+
+        // Hidden canvas to measure exact text width in pixels
+        const measureCanvas = document.createElement('canvas');
+        const measureCtx = measureCanvas.getContext('2d');
+
+        function measureText(text, font) {
+            measureCtx.font = font;
+            return Math.floor(measureCtx.measureText(text).width);
+        }
+
+        function updateSerp() {
+            // Update URL formatting for preview (strip https://)
+            let displayUrl = inputUrl.value.replace(/^https?:\/\//, '').replace(/\/$/, '');
+            previewUrl.innerText = displayUrl || "example.com";
+            
+            // Set Limits based on Desktop/Mobile
+            const tMaxPx = isMobile ? 500 : 600;
+            const tMinChar = 30;
+            const tMaxChar = isMobile ? 55 : 65;
+            
+            const dMaxPx = isMobile ? 680 : 920;
+            const dMinChar = 120;
+            const dMaxChar = isMobile ? 130 : 160;
+            
+            // Update Title (Arial 20px is standard for Google SERP titles)
+            const tText = inputTitle.value;
+            const tPx = measureText(tText, '20px Arial');
+            previewTitle.innerText = tText || "Example Title";
+            titleStats.innerText = `${tPx}px / ${tMaxPx}px (${tText.length} chars)`;
+            
+            if (tPx > tMaxPx || tText.length > tMaxChar || tText.length < tMinChar) {
+                titleStats.className = 'serp-limit danger';
+            } else {
+                titleStats.className = 'serp-limit perfect';
+            }
+
+            // Update Description (Arial 14px is standard for Google SERP desc)
+            const dText = inputDesc.value;
+            const dPx = measureText(dText, '14px Arial');
+            previewDesc.innerText = dText || "Example description text.";
+            descStats.innerText = `${dPx}px / ${dMaxPx}px (${dText.length} chars)`;
+            
+            if (dPx > dMaxPx || dText.length > dMaxChar || dText.length < dMinChar) {
+                descStats.className = 'serp-limit danger';
+            } else {
+                descStats.className = 'serp-limit perfect';
+            }
+        }
+
+        fetchBtn.addEventListener('click', async () => {
+            const url = inputUrl.value.trim();
+            if(!url) return;
+            
+            const targetUrl = url.startsWith('http') ? url : 'https://' + url;
+            inputUrl.value = targetUrl;
+            
+            fetchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            fetchBtn.disabled = true;
+            
+            try {
+                // Using allorigins as a public CORS proxy to allow fetching on a static site
+                const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`);
+                if(res.ok) {
+                    const data = await res.json();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data.contents, "text/html");
+                    
+                    const title = doc.querySelector('title') ? doc.querySelector('title').innerText : '';
+                    const metaDesc = doc.querySelector('meta[name="description"]') ? doc.querySelector('meta[name="description"]').getAttribute('content') : '';
+                    
+                    inputTitle.value = title.trim();
+                    inputDesc.value = metaDesc.trim();
+                    
+                    // Attempt to fetch favicon from Google's favicon service
+                    try {
+                        const urlObj = new URL(targetUrl);
+                        previewFavicon.src = `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=32`;
+                        previewFavicon.style.display = 'inline-block';
+                    } catch(e) {}
+                    
+                    updateSerp();
+                } else {
+                    alert("Failed to fetch data. The target site might block requests.");
+                }
+            } catch (err) {
+                alert("Error fetching URL. Please try again.");
+                console.error(err);
+            }
+            
+            fetchBtn.innerHTML = '<i class="fas fa-bolt"></i> Fetch';
+            fetchBtn.disabled = false;
+        });
+
+        inputUrl.addEventListener('input', updateSerp);
+        inputTitle.addEventListener('input', updateSerp);
+        inputDesc.addEventListener('input', updateSerp);
+        
+        // Initial run
+        updateSerp();
     </script>
 </body>
 </html>
