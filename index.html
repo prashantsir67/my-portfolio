@@ -13,487 +13,813 @@
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-T6PFLVV8');</script>
-    <!-- End Google Tag Manager -->
-
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-dark: #0a0a0f;
-            --bg-card: #13131c;
-            --neon-cyan: #00f3ff;
-            --neon-purple: #b53cff;
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --font-sans: 'Outfit', sans-serif;
-            --font-mono: 'Fira Code', monospace;
+            /* Futuristic Cyber/Glassmorphism Theme */
+            --bg-base: #050505;
+            --bg-accent: #0f0f13;
+            --primary: #00f0ff;
+            --secondary: #ff0055;
+            --tertiary: #7000ff;
+            
+            --text-main: #f0f0f0;
+            --text-muted: #8892b0;
+            
+            --glass-bg: rgba(15, 15, 19, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            
+            --font-display: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            cursor: none; /* Custom cursor */
         }
 
         html {
             scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--bg-base);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-base);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--tertiary);
+            border-radius: 10px;
         }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--bg-base);
             color: var(--text-main);
-            font-family: var(--font-sans);
+            font-family: var(--font-display);
             line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* Custom Cursor Glow */
-        .cursor-glow {
-            position: fixed;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(0, 243, 255, 0.15) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            z-index: 9999;
-            mix-blend-mode: screen;
-            transition: width 0.3s, height 0.3s;
-        }
-
-        /* Particles Background */
-        #particles-js {
+        /* ------------------ CUSTOM CURSOR ------------------ */
+        .cursor-dot, .cursor-outline {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary);
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(0, 240, 255, 0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+            mix-blend-mode: screen;
+        }
+
+        /* ------------------ DYNAMIC BACKGROUND ------------------ */
+        .bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            background: radial-gradient(circle at 15% 50%, rgba(112, 0, 255, 0.08), transparent 25%),
+                        radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.08), transparent 25%);
+        }
+
+        .ambient-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0,240,255,0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            filter: blur(80px);
             z-index: -1;
-            opacity: 0.4;
+            pointer-events: none;
+            transition: left 0.1s ease-out, top 0.1s ease-out;
+            transform: translate(-50%, -50%);
         }
 
-        /* Utilities */
-        .neon-text {
-            color: var(--neon-cyan);
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5), 0 0 20px rgba(0, 243, 255, 0.3);
+        /* ------------------ GLASSMORPHISM UTILITIES ------------------ */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: var(--glass-shadow);
         }
 
-        .text-neon {
-            color: var(--neon-cyan);
+        .text-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--tertiary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
         }
 
-        .section-title {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 3rem;
-            font-weight: 800;
-        }
-
-        .section {
-            padding: 6rem 10%;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* Navbar */
+        /* ------------------ NAVBAR ------------------ */
         .navbar {
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 1.5rem 10%;
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(10px);
+            padding: 1.5rem 5%;
             z-index: 1000;
-            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+            transition: var(--transition-smooth);
+            background: transparent;
+        }
+
+        .navbar.scrolled {
+            padding: 1rem 5%;
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
         }
 
         .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
+            font-size: 1.8rem;
+            font-weight: 900;
             color: #fff;
             text-decoration: none;
-            letter-spacing: 1px;
+            letter-spacing: -1px;
+            position: relative;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        .logo:hover::after {
+            width: 100%;
         }
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
             align-items: center;
         }
 
         .nav-links a {
-            color: var(--text-muted);
+            color: var(--text-main);
             text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s, text-shadow 0.3s;
+            font-weight: 500;
+            font-size: 1rem;
+            position: relative;
+            transition: var(--transition-smooth);
         }
 
         .nav-links a:hover {
-            color: var(--neon-cyan);
-            text-shadow: 0 0 8px rgba(0, 243, 255, 0.6);
+            color: var(--primary);
+            text-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
         }
 
         .nav-btn {
-            border: 1px solid var(--neon-cyan);
-            padding: 0.5rem 1.2rem;
-            border-radius: 4px;
-            color: var(--neon-cyan) !important;
+            padding: 0.6rem 1.5rem !important;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(5px);
         }
 
         .nav-btn:hover {
-            background: rgba(0, 243, 255, 0.1);
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+            background: var(--primary);
+            color: var(--bg-base) !important;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
         }
 
-        /* Hero Section */
+        /* ------------------ SECTIONS ------------------ */
+        section {
+            min-height: 100vh;
+            padding: 8rem 5% 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-header {
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+
+        .section-header h2 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ------------------ HERO SECTION ------------------ */
         .hero {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            min-height: 100vh;
-            padding: 8rem 10% 4rem;
             gap: 4rem;
         }
 
         .hero-content {
-            flex: 1;
+            flex: 1.2;
+            z-index: 10;
         }
 
-        .profile-wrap {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            padding: 5px;
-            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.2rem;
+            background: rgba(112, 0, 255, 0.15);
+            border: 1px solid rgba(112, 0, 255, 0.3);
+            border-radius: 50px;
+            color: #d4b3ff;
+            font-size: 0.9rem;
+            font-weight: 600;
             margin-bottom: 2rem;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
-            display: inline-block;
-            transition: transform 0.3s;
+            box-shadow: 0 0 20px rgba(112, 0, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .hero-badge i {
+            color: var(--primary);
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            line-height: 1.1;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            max-width: 550px;
+            line-height: 1.7;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            border: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-glow {
+            background: var(--text-main);
+            color: var(--bg-base);
+        }
+
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--tertiary));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn-glow:hover::before {
+            opacity: 1;
         }
         
-        .profile-wrap:hover {
-            transform: scale(1.05);
+        .btn-glow:hover {
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--tertiary);
+            box-shadow: inset 0 0 20px rgba(112, 0, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .hero-visual {
+            flex: 0.8;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        /* Hero 3D Card */
+        .profile-card {
+            width: 100%;
+            aspect-ratio: 4/5;
+            border-radius: 24px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s;
+        }
+
+        .profile-image-container {
+            width: 100%;
+            height: 100%;
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .profile-image-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--bg-base) 0%, transparent 60%);
         }
 
         .profile-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 50%;
-            border: 3px solid var(--bg-dark);
+            filter: contrast(1.1) brightness(0.9) grayscale(20%);
+            transition: filter 0.5s;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            background: rgba(181, 60, 255, 0.1);
-            border: 1px solid var(--neon-purple);
-            color: var(--neon-purple);
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 0 10px rgba(181, 60, 255, 0.2);
+        .profile-card:hover .profile-img {
+            filter: contrast(1.1) brightness(1) grayscale(0%);
         }
 
-        .hero h1 {
-            font-size: 4rem;
-            line-height: 1.1;
-            margin-bottom: 0.5rem;
+        .floating-badge {
+            position: absolute;
+            padding: 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateZ(50px); /* 3D pop effect */
+        }
+
+        .badge-1 {
+            bottom: 30px;
+            left: -30px;
+            background: rgba(15, 15, 19, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .badge-2 {
+            top: 40px;
+            right: -20px;
+            background: rgba(0, 240, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            animation: float 5s ease-in-out infinite reverse;
+        }
+
+        .floating-badge i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .floating-badge div h4 {
+            font-size: 1.1rem;
             font-weight: 800;
         }
-
-        .bio {
-            font-size: 1.2rem;
+        .floating-badge div p {
+            font-size: 0.8rem;
             color: var(--text-muted);
-            margin-bottom: 2.5rem;
-            margin-top: 1.5rem;
-            max-width: 600px;
+            margin: 0;
         }
 
-        .hero-actions {
-            display: flex;
-            gap: 1.5rem;
+        @keyframes float {
+            0% { transform: translateZ(50px) translateY(0px); }
+            50% { transform: translateZ(50px) translateY(-15px); }
+            100% { transform: translateZ(50px) translateY(0px); }
         }
 
-        .btn {
-            padding: 0.8rem 2rem;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            border: none;
-            font-family: var(--font-sans);
-            font-size: 1rem;
-        }
 
-        .primary-btn {
-            background: var(--neon-cyan);
-            color: #000;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
-        }
-
-        .primary-btn:hover {
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.7);
-            transform: translateY(-2px);
-        }
-
-        .primary-btn:disabled {
-            background: #333;
-            color: #888;
-            box-shadow: none;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .secondary-btn {
-            background: transparent;
-            color: var(--text-main);
-            border: 1px solid var(--text-muted);
-        }
-
-        .secondary-btn:hover {
-            border-color: var(--neon-cyan);
-            color: var(--neon-cyan);
-        }
-
-        .hero-visual {
-            flex: 1;
-        }
-
-        /* Terminal Card */
-        .tech-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px rgba(0, 243, 255, 0.1);
-            font-family: var(--font-mono);
-            transition: transform 0.3s ease;
-        }
-        
-        .tech-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card-header {
-            background: #1e1e2e;
-            padding: 0.8rem 1rem;
-            font-size: 0.9rem;
-            color: #a6accd;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .card-body {
-            padding: 1.5rem;
-            font-size: 0.95rem;
-        }
-
-        .prompt {
-            color: var(--neon-purple);
-        }
-
-        .cmd {
-            color: var(--neon-cyan);
-        }
-
-        .output {
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            margin-top: 0.3rem;
-        }
-
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 18px;
-            background: var(--neon-cyan);
-            animation: blink 1s step-end infinite;
-            vertical-align: middle;
-        }
-
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-
-        /* Timeline */
-        .timeline {
-            position: relative;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 20px;
-            top: 0;
-            height: 100%;
-            width: 2px;
-            background: rgba(0, 243, 255, 0.2);
-        }
-
-        .timeline-item {
-            position: relative;
-            padding-left: 60px;
-            margin-bottom: 3rem;
-            background: var(--bg-card);
-            padding: 2rem 2rem 2rem 60px;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
-        }
-
-        .timeline-item:hover {
-            border-color: rgba(0, 243, 255, 0.3);
-            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.05);
-            transform: translateY(-5px);
-        }
-
-        .timeline-dot {
-            position: absolute;
-            left: 14px;
-            top: 2.5rem;
-            width: 14px;
-            height: 14px;
-            background: var(--bg-dark);
-            border: 2px solid var(--neon-cyan);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--neon-cyan);
-        }
-
-        .timeline-date {
-            color: var(--neon-purple);
-            font-family: var(--font-mono);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .timeline-content h3 {
-            font-size: 1.5rem;
-            color: #fff;
-        }
-
-        .timeline-content h4 {
-            color: var(--text-muted);
-            font-weight: 400;
-            margin-bottom: 1rem;
-        }
-
-        /* Projects */
-        .projects-grid {
+        /* ------------------ EXPERTISE / PROJECTS ------------------ */
+        .grid-layout {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem;
+            margin-top: 3rem;
         }
 
         .project-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 8px;
             padding: 2.5rem;
-            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at top right, rgba(0,240,255,0.1), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
         }
 
         .project-card:hover {
-            border-color: var(--neon-purple);
-            box-shadow: 0 15px 35px rgba(181, 60, 255, 0.1);
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            border-color: rgba(0, 240, 255, 0.3);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 240, 255, 0.1);
         }
 
         .project-icon {
-            font-size: 2.5rem;
-            color: var(--neon-cyan);
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 240, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--primary);
             margin-bottom: 1.5rem;
+            border: 1px solid rgba(0, 240, 255, 0.2);
         }
 
         .project-card h3 {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             margin-bottom: 1rem;
-            color: #fff;
+            font-weight: 700;
         }
 
         .project-card p {
             color: var(--text-muted);
-        }
-
-        /* Interactive Widget */
-        .widget-container {
-            max-width: 700px;
-            margin: 0 auto;
-            background: var(--bg-card);
-            border-radius: 8px;
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            overflow: hidden;
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.05);
-            transition: transform 0.3s;
-        }
-        
-        .widget-container:hover {
-            transform: translateY(-5px);
-        }
-
-        .widget-header {
-            background: rgba(0, 243, 255, 0.05);
-            padding: 1.5rem;
-            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
-            text-align: center;
-        }
-
-        .widget-header h3 {
-            color: var(--neon-cyan);
-            font-weight: 600;
-        }
-
-        .widget-body {
-            padding: 2rem;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 1rem;
             margin-bottom: 2rem;
         }
 
-        .input-group input {
-            flex: 1;
-            padding: 1rem;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
+        .project-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .project-tags span {
+            font-size: 0.8rem;
+            padding: 0.3rem 0.8rem;
+            background: rgba(255,255,255,0.05);
             border-radius: 4px;
+            font-family: var(--font-mono);
+            color: var(--text-main);
+        }
+
+
+        /* ------------------ JOURNEY TIMELINE ------------------ */
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), var(--tertiary), transparent);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+
+        .timeline-item.left { left: 0; }
+        .timeline-item.right { left: 50%; }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background-color: var(--bg-base);
+            border: 3px solid var(--primary);
+            top: 30px;
+            border-radius: 50%;
+            z-index: 1;
+            box-shadow: 0 0 15px var(--primary);
+            transition: var(--transition-smooth);
+        }
+
+        .timeline-item.right::after {
+            left: -10px;
+        }
+        
+        .timeline-item:hover::after {
+            background-color: var(--primary);
+            transform: scale(1.3);
+        }
+
+        .timeline-content {
+            padding: 2rem;
+            position: relative;
+            border-radius: 16px;
+        }
+        
+        .timeline-content:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .date-badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            color: var(--tertiary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+
+        /* ------------------ INTERACTIVE SEO TERMINAL ------------------ */
+        .terminal-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+        }
+
+        .terminal-header {
+            background: #1a1a24;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+        .window-controls span {
+            width: 12px; height: 12px; border-radius: 50%;
+        }
+        .close { background: #ff5f56; }
+        .min { background: #ffbd2e; }
+        .max { background: #27c93f; }
+
+        .terminal-title {
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+        }
+
+        .terminal-body {
+            background: #0a0a0f;
+            padding: 2rem;
+            font-family: var(--font-mono);
+            height: 450px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cmd-line {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .prompt { color: var(--tertiary); font-weight: bold; }
+        .path { color: var(--primary); }
+        
+        .terminal-input-wrap {
+            display: flex;
+            flex: 1;
+            gap: 0.5rem;
+        }
+
+        .terminal-input {
+            background: transparent;
+            border: none;
             color: #fff;
-            font-family: var(--font-sans);
+            font-family: var(--font-mono);
             font-size: 1rem;
-        }
-
-        .input-group input:focus {
+            flex: 1;
             outline: none;
-            border-color: var(--neon-cyan);
         }
 
-        .results-hidden {
+        .output-line {
+            color: #a0a0a0;
+            margin-bottom: 0.5rem;
+            padding-left: 2rem;
+        }
+        .output-success { color: #4ade80; }
+        .output-warn { color: #facc15; }
+        
+        .analyzer-results {
             display: none;
+            padding-left: 2rem;
+            margin-top: 1rem;
+            animation: fadeIn 0.5s forwards;
         }
 
-        .results-visible {
-            display: block;
-            animation: fadeIn 0.5s ease-in;
+        .metric-bar {
+            margin-bottom: 1rem;
+        }
+        .metric-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            color: #d0d0d0;
+        }
+        .bar-bg {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--tertiary), var(--primary));
+            transition: width 2s cubic-bezier(0.1, 0.8, 0.2, 1);
+        }
+
+        /* ------------------ CONTACT SECTION ------------------ */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .contact-info h3 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .contact-info p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .social-dock {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .social-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #fff;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            transition: var(--transition-smooth);
+            text-decoration: none;
+        }
+
+        .social-btn:hover {
+            background: var(--primary);
+            color: #000;
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 240, 255, 0.4);
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .input-box {
+            position: relative;
+        }
+
+        .input-box input, .input-box textarea {
+            width: 100%;
+            padding: 1.2rem;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 1rem;
+            transition: var(--transition-smooth);
+        }
+
+        .input-box textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .input-box input:focus, .input-box textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+            background: rgba(0, 240, 255, 0.02);
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            margin-top: 4rem;
+        }
+
+        /* ------------------ ANIMATIONS ------------------ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         @keyframes fadeIn {
@@ -501,528 +827,433 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .progress-container {
-            margin-bottom: 1.5rem;
-        }
-
-        .progress-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .score {
-            color: var(--neon-cyan);
-            font-family: var(--font-mono);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan));
-            width: 0%;
-            transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-            box-shadow: 0 0 10px var(--neon-cyan);
-        }
-
-        .terminal-log {
-            margin-top: 2rem;
-            background: #000;
-            padding: 1rem;
-            border-radius: 4px;
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            height: 150px;
-            overflow-y: auto;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .log-entry {
-            margin-bottom: 0.3rem;
-            color: var(--text-muted);
-        }
-        .log-success { color: #4ade80; }
-        .log-warn { color: #facc15; }
-
-        /* Contact Section */
-        .contact-section {
-            text-align: center;
-        }
-
-        .contact-desc {
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            margin-bottom: 3rem;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .social-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 60px;
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 50%;
-            color: #fff;
-            font-size: 1.5rem;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .social-link:hover {
-            background: rgba(0, 243, 255, 0.1);
-            border-color: var(--neon-cyan);
-            color: var(--neon-cyan);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 243, 255, 0.2);
-        }
-
-        .email-btn {
-            font-size: 1.2rem;
-            padding: 1rem 3rem;
-            text-transform: lowercase;
-        }
-
-        .contact-form {
-            max-width: 600px;
-            margin: 3rem auto 0;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            text-align: left;
-            background: var(--bg-card);
-            padding: 2.5rem;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .contact-form input, .contact-form textarea {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 4px;
-            color: #fff;
-            font-family: var(--font-sans);
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .contact-form input:focus, .contact-form textarea:focus {
-            outline: none;
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
-        }
-
-        .contact-form textarea {
-            resize: vertical;
-            min-height: 150px;
-        }
-
-        .form-status {
-            text-align: center;
-            font-weight: 600;
-            margin-top: 1rem;
-            min-height: 24px;
-        }
-
-
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            background: var(--bg-card);
-            color: var(--text-muted);
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero {
+        /* ------------------ RESPONSIVE ------------------ */
+        @media (max-width: 968px) {
+            .hero, .contact-grid {
                 flex-direction: column;
                 text-align: center;
-                padding-top: 8rem;
             }
-            
-            .profile-wrap {
-                margin: 0 auto 2rem;
-            }
-            
-            .hero h1 { font-size: 2.5rem; }
-            
-            .hero-actions {
+            .btn-group, .social-dock {
                 justify-content: center;
             }
-            
-            .nav-links { display: none; }
-            
-            .timeline::before { left: 0; }
-            .timeline-item { padding-left: 30px; }
-            .timeline-dot { left: -6px; }
-            
-            .input-group { flex-direction: column; }
-            .section { padding: 4rem 5%; }
+            .timeline::after {
+                left: 31px;
+            }
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            .timeline-item.right {
+                left: 0%;
+            }
+            .timeline-item.left::after, .timeline-item.right::after {
+                left: 21px;
+            }
+            .floating-badge {
+                display: none;
+            }
+            .nav-links {
+                display: none; /* In a real app, add a hamburger menu here */
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T6PFLVV8"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T6PFLVV8" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
-    <div id="particles-js"></div>
-    <div class="cursor-glow"></div>
+    <!-- Backgrounds -->
+    <div class="bg-canvas"></div>
+    <div class="ambient-glow" id="glow"></div>
+    
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
 
-    <nav class="navbar">
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">Prashant<span class="neon-text">.SEO</span></a>
+            <a href="#" class="logo">Prashant<span>.SEO</span></a>
             <div class="nav-links">
-                <a href="#about">About</a>
-                <a href="#experience">Journey</a>
-                <a href="#projects">Projects</a>
-                <a href="#interactive">Toolkit</a>
-                <a href="#contact" class="nav-btn">Connect</a>
+                <a href="#about" class="hover-target">About</a>
+                <a href="#projects" class="hover-target">Impacts</a>
+                <a href="#experience" class="hover-target">Journey</a>
+                <a href="#terminal" class="hover-target">Terminal</a>
+                <a href="#contact" class="nav-btn hover-target">Connect</a>
             </div>
         </div>
     </nav>
 
-    <main>
-        <!-- Hero Section -->
-        <section id="about" class="hero">
-            <div class="hero-content">
-                <div class="profile-wrap">
-                    <img src="prashant.jpg" alt="Prashant Joshi" class="profile-img" onerror="this.src='https://via.placeholder.com/150/13131c/00f3ff?text=PJ'">
-                </div>
-                <div class="badge">SEO Executive @ Nest Nepal</div>
-                <h1>Dominating Search.</h1>
-                <h1 class="neon-text">Scaling Growth.</h1>
-                <p class="bio">
-                    I'm <strong>Prashant Joshi</strong>. In just a few months, I've evolved from an ambitious intern to SEO strategies as an Executive at Nest Nepal. I specialize in technical SEO, deep content optimization, and engineering organic visibility that converts.
-                </p>
-                <div class="hero-actions" style="flex-wrap: wrap;">
-                    <a href="#projects" class="btn primary-btn">View My Work <i class="fas fa-arrow-right"></i></a>
-                    <a href="#contact" class="btn secondary-btn">Contact Me</a>
-                    <a href="https://nestnepal.com/about/#:~:text=Prashant%20Joshi" target="_blank" class="btn secondary-btn" style="border-color: var(--neon-purple); color: var(--neon-purple); box-shadow: 0 0 10px rgba(181, 60, 255, 0.2);"><i class="fas fa-certificate"></i> Verified on Nest Nepal</a>
-                </div>
+    <!-- Hero Section -->
+    <section id="about" class="hero reveal active">
+        <div class="hero-content">
+            <div class="hero-badge hover-target">
+                <i class="fas fa-bolt"></i> SEO Executive @ Nest Nepal
             </div>
-            <div class="hero-visual">
-                <div class="tech-card">
-                    <div class="card-header">
-                        <i class="fas fa-terminal"></i> prashant_seo.exe
-                    </div>
-                    <div class="card-body">
-                        <p><span class="prompt">➜</span> <span class="cmd">whoami</span></p>
-                        <p class="output">Prashant Joshi | SEO Executive</p>
-                        <p><span class="prompt">➜</span> <span class="cmd">get_skills --core</span></p>
-                        <p class="output">["Technical SEO", "On-Page Optimization", "Content Strategy", "Web Analytics"]</p>
-                        <p><span class="prompt">➜</span> <span class="cmd">current_status</span></p>
-                        <p class="output text-neon">Optimizing the web, one keyword at a time...</p>
-                        <span class="cursor"></span>
+            <h1>Dominating Search.<br><span class="text-gradient">Scaling Growth.</span></h1>
+            <p>I engineer organic visibility that converts. Specializing in technical SEO, deep content architecture, and data-driven growth strategies that put brands at the top of the SERPs.</p>
+            
+            <div class="btn-group">
+                <a href="#projects" class="btn btn-glow hover-target">View My Work <i class="fas fa-arrow-right"></i></a>
+                <a href="https://nestnepal.com/about/#:~:text=Prashant%20Joshi" target="_blank" class="btn btn-outline hover-target">
+                    <i class="fas fa-certificate" style="color:var(--tertiary)"></i> Verified Profile
+                </a>
+            </div>
+        </div>
+        
+        <div class="hero-visual">
+            <div class="profile-card" id="profile-card">
+                <div class="profile-image-container">
+                    <img src="prashant.jpg" alt="Prashant Joshi" class="profile-img" onerror="this.src='https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80'">
+                </div>
+                <div class="floating-badge badge-1 glass-panel">
+                    <i class="fas fa-chart-line"></i>
+                    <div>
+                        <h4>+240%</h4>
+                        <p>Organic Traffic</p>
                     </div>
                 </div>
+                <div class="floating-badge badge-2 glass-panel">
+                    <i class="fas fa-spider"></i>
+                    <div>
+                        <h4>0</h4>
+                        <p>Crawl Errors</p>
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Experience Section -->
-        <section id="experience" class="section">
-            <h2 class="section-title">My <span class="neon-text">Journey</span></h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-date">June 2025 - Present</div>
-                    <div class="timeline-content">
-                        <h3>SEO Executive</h3>
-                        <h4><a href="https://nestnepal.com/about/#:~:text=Prashant%20Joshi" target="_blank" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--neon-cyan)'" onmouseout="this.style.color='var(--text-muted)'">Nest Nepal <i class="fas fa-external-link-alt" style="font-size: 0.8em; margin-left: 5px;"></i></a></h4>
-                        <p>Elevated to an executive role to drive organic search strategies, manage comprehensive technical audits, and implement high-impact content optimizations across major digital assets.</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-date">May 10, 2025 - May 31, 2025</div>
-                    <div class="timeline-content">
-                        <h3>SEO Intern</h3>
-                        <h4>Nest Nepal</h4>
-                        <p>Started my professional journey here, rapidly mastering SEO fundamentals, keyword research, and on-page optimization techniques that led to immediate structural improvements.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Projects Section -->
-        <section id="projects" class="section">
-            <h2 class="section-title">Key <span class="neon-text">Impacts</span></h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-icon"><i class="fas fa-globe"></i></div>
-                    <h3>Nest Nepal Core</h3>
-                    <p>Spearheaded the complete content optimization for major pages on the Nest Nepal website, significantly improving keyword relevance and search engine understanding.</p>
-                </div>
-                <div class="project-card">
-                    <div class="project-icon"><i class="fas fa-comment-sms"></i></div>
-                    <h3>Nest SMS</h3>
-                    <p>Currently working on targeted SEO strategies to boost the visibility of Nest SMS, focusing on localized search intent and conversion rate optimization.</p>
-                </div>
-                <div class="project-card">
+    <!-- Projects Section -->
+    <section id="projects">
+        <div class="section-header reveal">
+            <h2 class="text-gradient">Key Impacts</h2>
+            <p>Transforming complex technical infrastructures into search-engine-loved assets.</p>
+        </div>
+        
+        <div class="grid-layout">
+            <div class="project-card glass-panel reveal hover-target">
+                <div>
                     <div class="project-icon"><i class="fas fa-server"></i></div>
-                    <h3>Babal Host</h3>
-                    <p>Contributed to Babal Host by implementing optimized meta tags for specific pages, designed to improve organic click-through rates and search engine visibility.</p>
+                    <h3>Nest Nepal Core</h3>
+                    <p>Spearheaded the complete technical and content optimization for major pages, dramatically improving keyword relevance and indexation speed.</p>
                 </div>
-            </div>
-        </section>
-
-        <!-- Interactive Widget Section -->
-        <section id="interactive" class="section">
-            <h2 class="section-title">Interactive <span class="neon-text">SEO Analyzer</span></h2>
-            <div class="widget-container">
-                <div class="widget-header">
-                    <h3><i class="fas fa-magnifying-glass-chart"></i> Live Page Audit Simulator</h3>
+                <div class="project-tags">
+                    <span>Technical SEO</span>
+                    <span>Content Strategy</span>
+                    <span>Core Web Vitals</span>
                 </div>
-                <div class="widget-body">
-                    <div class="input-group">
-                        <input type="text" id="target-url" placeholder="Enter URL (e.g., https://example.com)" autocomplete="off">
-                        <button id="analyze-btn" class="btn primary-btn">Analyze</button>
-                    </div>
-                    <div id="analysis-results" class="results-hidden">
-                        <div class="progress-container">
-                            <div class="progress-label"><span>Technical SEO</span> <span class="score" id="score-tech">0%</span></div>
-                            <div class="progress-bar"><div class="progress-fill" id="fill-tech"></div></div>
-                        </div>
-                        <div class="progress-container">
-                            <div class="progress-label"><span>On-Page Optimization</span> <span class="score" id="score-onpage">0%</span></div>
-                            <div class="progress-bar"><div class="progress-fill" id="fill-onpage"></div></div>
-                        </div>
-                        <div class="progress-container">
-                            <div class="progress-label"><span>Performance</span> <span class="score" id="score-perf">0%</span></div>
-                            <div class="progress-bar"><div class="progress-fill" id="fill-perf"></div></div>
-                        </div>
-                        <div class="terminal-log" id="audit-log">
-                            <!-- Logs injected via JS -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-
-        <!-- Contact Section -->
-        <section id="contact" class="section contact-section">
-            <h2 class="section-title">Let's <span class="neon-text">Connect</span></h2>
-            <p class="contact-desc">Ready to scale your digital presence? Let's talk SEO, strategy, and growth.</p>
-            <div class="social-links">
-                <a href="https://www.linkedin.com/in/prashant-joshi7/" target="_blank" class="social-link" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                <a href="https://github.com/prashantsir67" target="_blank" class="social-link" title="GitHub"><i class="fab fa-github"></i></a>
-                <a href="https://www.instagram.com/prashant.mnr/" target="_blank" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="mailto:joshiprashant9835@gmail.com" class="social-link" title="Email"><i class="fas fa-envelope"></i></a>
             </div>
             
-            <form action="https://formsubmit.co/joshiprashant9835@gmail.com" method="POST" class="contact-form">
-                <!-- FormSubmit config -->
-                <input type="hidden" name="_subject" value="New Portfolio Contact Message!">
+            <div class="project-card glass-panel reveal hover-target" style="transition-delay: 100ms;">
+                <div>
+                    <div class="project-icon"><i class="fas fa-comment-sms"></i></div>
+                    <h3>Nest SMS Localized</h3>
+                    <p>Engineered targeted SEO strategies focusing on localized search intent and conversion rate optimization for enterprise SMS solutions.</p>
+                </div>
+                <div class="project-tags">
+                    <span>Local SEO</span>
+                    <span>CRO</span>
+                    <span>Keyword Mapping</span>
+                </div>
+            </div>
+            
+            <div class="project-card glass-panel reveal hover-target" style="transition-delay: 200ms;">
+                <div>
+                    <div class="project-icon"><i class="fas fa-database"></i></div>
+                    <h3>Babal Host Audits</h3>
+                    <p>Executed comprehensive site audits and implemented optimized meta-structures designed to surge organic click-through rates.</p>
+                </div>
+                <div class="project-tags">
+                    <span>Meta Optimization</span>
+                    <span>CTR Tuning</span>
+                    <span>Schema Markup</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Timeline -->
+    <section id="experience">
+        <div class="section-header reveal">
+            <h2 class="text-gradient">The Journey</h2>
+            <p>From mastering the fundamentals to orchestrating enterprise-level organic strategies.</p>
+        </div>
+        
+        <div class="timeline">
+            <div class="timeline-item left reveal">
+                <div class="timeline-content glass-panel hover-target">
+                    <span class="date-badge">June 2025 - Present</span>
+                    <h3>SEO Executive</h3>
+                    <h4 style="color:var(--text-muted); margin-bottom: 1rem;">Nest Nepal</h4>
+                    <p>Elevated to an executive role to drive organic search strategies, manage comprehensive technical audits, and implement high-impact content optimizations across major digital assets.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item right reveal">
+                <div class="timeline-content glass-panel hover-target">
+                    <span class="date-badge">May 2025</span>
+                    <h3>SEO Intern</h3>
+                    <h4 style="color:var(--text-muted); margin-bottom: 1rem;">Nest Nepal</h4>
+                    <p>Started my professional journey here, rapidly mastering SEO fundamentals, keyword research, and on-page optimization techniques that led to immediate structural improvements.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Terminal / SEO Widget -->
+    <section id="terminal">
+        <div class="section-header reveal">
+            <h2 class="text-gradient">Audit Engine</h2>
+            <p>Experience a simulation of my technical auditing workflow.</p>
+        </div>
+        
+        <div class="terminal-wrapper reveal hover-target">
+            <div class="terminal-header">
+                <div class="window-controls">
+                    <span class="close"></span>
+                    <span class="min"></span>
+                    <span class="max"></span>
+                </div>
+                <div class="terminal-title">prashant_seo_toolkit.exe - Audit Mode</div>
+            </div>
+            <div class="terminal-body" id="term-body">
+                <div class="output-line">PrashantOS v2.0.26 (SEO Edition)</div>
+                <div class="output-line">Type a domain to initiate a deep-crawl audit...</div>
+                
+                <div class="cmd-line" id="input-line">
+                    <span class="prompt">➜</span>
+                    <span class="path">~/audits</span>
+                    <div class="terminal-input-wrap">
+                        <span style="color:#ff0055">scan</span> 
+                        <input type="text" id="target-url" class="terminal-input" placeholder="https://example.com" autocomplete="off">
+                    </div>
+                </div>
+                
+                <div id="term-logs"></div>
+                
+                <div class="analyzer-results" id="analyzer-results">
+                    <div class="output-line output-success">Audit Complete. Compiling heuristics...</div>
+                    <br>
+                    <div class="metric-bar">
+                        <div class="metric-label"><span>Technical Integrity</span> <span id="val-tech">0%</span></div>
+                        <div class="bar-bg"><div class="bar-fill" id="bar-tech"></div></div>
+                    </div>
+                    <div class="metric-bar">
+                        <div class="metric-label"><span>Content Relevance (TF-IDF)</span> <span id="val-content">0%</span></div>
+                        <div class="bar-bg"><div class="bar-fill" id="bar-content"></div></div>
+                    </div>
+                    <div class="metric-bar">
+                        <div class="metric-label"><span>Core Web Vitals</span> <span id="val-perf">0%</span></div>
+                        <div class="bar-bg"><div class="bar-fill" id="bar-perf"></div></div>
+                    </div>
+                    <br>
+                    <div class="output-line" style="color:var(--primary)">> Recommendation: Hire Prashant to fix these metrics.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="contact-grid reveal">
+            <div class="contact-info">
+                <h2 class="text-gradient" style="font-size: 3.5rem; font-weight:800; margin-bottom: 1rem;">Let's Build.</h2>
+                <p>Whether you're dealing with a sudden drop in rankings, migrating a massive site, or just want to dominate your niche—I'm ready to architect the solution.</p>
+                
+                <div class="social-dock">
+                    <a href="https://www.linkedin.com/in/prashant-joshi7/" target="_blank" class="social-btn hover-target"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://github.com/prashantsir67" target="_blank" class="social-btn hover-target"><i class="fab fa-github"></i></a>
+                    <a href="https://www.instagram.com/prashant.mnr/" target="_blank" class="social-btn hover-target"><i class="fab fa-instagram"></i></a>
+                    <a href="mailto:joshiprashant9835@gmail.com" class="social-btn hover-target"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+            
+            <form action="https://formsubmit.co/joshiprashant9835@gmail.com" method="POST" class="contact-form glass-panel hover-target" style="padding: 2.5rem;">
+                <input type="hidden" name="_subject" value="New Inquiry from Premium Portfolio">
                 <input type="hidden" name="_template" value="table">
-                <input type="hidden" name="_next" value="https://prashant-joshi.com.np/#contact">
                 
-                <input type="text" name="name" placeholder="Your Name" required autocomplete="off">
-                <input type="email" name="email" placeholder="Your Email" required autocomplete="off">
-                <textarea name="message" placeholder="Your Message" required></textarea>
-                
-                <button type="submit" class="btn primary-btn" style="width: 100%; justify-content: center;">Send Message</button>
-                <div class="form-status" style="font-weight:normal; color:var(--text-muted); font-size:0.85rem;">You will be asked to complete a quick reCAPTCHA.</div>
+                <div class="input-box">
+                    <input type="text" name="name" placeholder="Name or Company" required>
+                </div>
+                <div class="input-box">
+                    <input type="email" name="email" placeholder="Email Address" required>
+                </div>
+                <div class="input-box">
+                    <textarea name="message" placeholder="Project Details or SEO Challenges..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-glow hover-target" style="width: 100%;">Initialize Contact</button>
             </form>
-        </section>
-    </main>
+        </div>
+    </section>
 
     <footer>
-        <p>&copy; 2026 Prashant Joshi. All rights reserved. | Engineered for Organic Growth.</p>
+        <p>&copy; 2026 Prashant Joshi. Engineered for Organic Supremacy.</p>
     </footer>
 
     <!-- Interactive Scripts -->
     <script>
-        // Cursor Glow Effect
-        document.addEventListener('mousemove', (e) => {
-            const cursor = document.querySelector('.cursor-glow');
-            if (cursor) {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
+        // Custom Cursor Logic
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorOutline = document.getElementById('cursor-outline');
+        const ambientGlow = document.getElementById('glow');
+        
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            
+            // Slight delay for outline
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 100, fill: "forwards" });
+            
+            // Move ambient background glow
+            ambientGlow.style.left = `${posX}px`;
+            ambientGlow.style.top = `${posY}px`;
+        });
+
+        // Hover effect for cursor
+        document.querySelectorAll('.hover-target').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorOutline.style.width = '60px';
+                cursorOutline.style.height = '60px';
+                cursorOutline.style.backgroundColor = 'rgba(0, 240, 255, 0.1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorOutline.style.width = '40px';
+                cursorOutline.style.height = '40px';
+                cursorOutline.style.backgroundColor = 'transparent';
+            });
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if(window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
             }
         });
 
-        // Interactive SEO Analyzer Widget
-        const analyzeBtn = document.getElementById('analyze-btn');
-        const targetUrlInput = document.getElementById('target-url');
-        const resultsDiv = document.getElementById('analysis-results');
-        const auditLog = document.getElementById('audit-log');
-
-        const scores = {
-            tech: document.getElementById('score-tech'),
-            onpage: document.getElementById('score-onpage'),
-            perf: document.getElementById('score-perf')
+        // Scroll Reveal Animation (Intersection Observer)
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
         };
+        
+        const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if(!entry.isIntersecting) return;
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target);
+            });
+        }, revealOptions);
+        
+        revealElements.forEach(el => revealOnScroll.observe(el));
 
-        const fills = {
-            tech: document.getElementById('fill-tech'),
-            onpage: document.getElementById('fill-onpage'),
-            perf: document.getElementById('fill-perf')
-        };
+        // 3D Tilt Effect on Hero Card
+        const profileCard = document.getElementById('profile-card');
+        profileCard.addEventListener('mousemove', (e) => {
+            const rect = profileCard.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = ((y - centerY) / centerY) * -10;
+            const rotateY = ((x - centerX) / centerX) * 10;
+            
+            profileCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+        
+        profileCard.addEventListener('mouseleave', () => {
+            profileCard.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+        });
 
-        const logs = [
-            "Initializing crawler engine...",
-            "[INFO] Resolving DNS and establishing secure connection.",
-            "[WARN] Scanning robots.txt - found 2 disallow directives.",
-            "Checking XML sitemap integrity...",
-            "[SUCCESS] Sitemap validated (1,240 URLs).",
-            "Analyzing DOM structure and semantic HTML...",
-            "[SUCCESS] H1-H6 hierarchy is strictly maintained.",
-            "Evaluating Core Web Vitals (LCP, FID, CLS)...",
-            "Extracting schema.org JSON-LD structured data...",
-            "[INFO] Found BreadcrumbList and Organization schemas.",
-            "Calculating keyword density and TF-IDF scores...",
-            "[SUCCESS] Analysis complete. Compiling final metrics."
+        // Interactive SEO Terminal Logic
+        const urlInput = document.getElementById('target-url');
+        const termLogs = document.getElementById('term-logs');
+        const inputLine = document.getElementById('input-line');
+        const resultsBox = document.getElementById('analyzer-results');
+        const termBody = document.getElementById('term-body');
+        
+        const mockLogs = [
+            "[INIT] Booting crawler engines...",
+            "[NET] Handshaking and fetching robots.txt...",
+            "[WARN] Found multiple redirect chains on assets.",
+            "[PARSE] Analyzing DOM for semantic structure...",
+            "[OK] H1-H6 hierarchy extracted.",
+            "[AUDIT] Checking schema.org JSON-LD...",
+            "[OK] Validated BreadcrumbList and Organization.",
+            "[CALC] Computing TF-IDF for primary keywords...",
+            "[AUDIT] Running Lighthouse Core Web Vitals simulation..."
         ];
 
-        if(analyzeBtn) {
-            analyzeBtn.addEventListener('click', () => {
-                if(!targetUrlInput.value) {
-                    alert("Please enter a URL to analyze.");
-                    return;
-                }
+        urlInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                const url = this.value;
+                if(!url) return;
                 
-                resultsDiv.className = 'results-visible';
-                auditLog.innerHTML = '';
+                this.disabled = true;
                 
-                Object.keys(fills).forEach(key => {
-                    fills[key].style.width = '0%';
-                    scores[key].innerText = '0%';
-                });
-
-                analyzeBtn.disabled = true;
-                analyzeBtn.innerText = "Analyzing...";
-
-                let logIndex = 0;
-                const logInterval = setInterval(() => {
-                    if(logIndex < logs.length) {
-                        const p = document.createElement('div');
-                        p.className = 'log-entry';
-                        let text = logs[logIndex];
-                        if(text.includes('[SUCCESS]')) p.classList.add('log-success');
-                        if(text.includes('[WARN]')) p.classList.add('log-warn');
-                        
-                        p.innerText = `> ${text}`;
-                        auditLog.appendChild(p);
-                        auditLog.scrollTop = auditLog.scrollHeight;
-                        logIndex++;
+                // Print command
+                const cmdDiv = document.createElement('div');
+                cmdDiv.className = 'output-line';
+                cmdDiv.innerHTML = `<span class="prompt">➜</span> <span class="path">~/audits</span> <span style="color:#ff0055">scan</span> ${url}`;
+                termLogs.appendChild(cmdDiv);
+                
+                resultsBox.style.display = 'none';
+                
+                let i = 0;
+                const interval = setInterval(() => {
+                    if (i < mockLogs.length) {
+                        const logDiv = document.createElement('div');
+                        logDiv.className = 'output-line';
+                        if(mockLogs[i].includes('[OK]')) logDiv.classList.add('output-success');
+                        if(mockLogs[i].includes('[WARN]')) logDiv.classList.add('output-warn');
+                        logDiv.innerText = mockLogs[i];
+                        termLogs.appendChild(logDiv);
+                        termBody.scrollTop = termBody.scrollHeight;
+                        i++;
                     } else {
-                        clearInterval(logInterval);
-                        
-                        animateScore('tech', 94);
-                        animateScore('onpage', 88);
-                        animateScore('perf', 92);
-                        
-                        analyzeBtn.disabled = false;
-                        analyzeBtn.innerText = "Analyze";
+                        clearInterval(interval);
+                        showResults();
                     }
                 }, 400);
-            });
-        }
+            }
+        });
 
-        function animateScore(key, target) {
-            let current = 0;
-            fills[key].style.width = `${target}%`;
+        function showResults() {
+            resultsBox.style.display = 'block';
+            termBody.scrollTop = termBody.scrollHeight;
             
-            const counter = setInterval(() => {
-                if(current >= target) {
-                    clearInterval(counter);
-                    scores[key].innerText = `${target}%`;
-                } else {
-                    current += 2;
-                    if(current > target) current = target;
-                    scores[key].innerText = `${current}%`;
-                }
-            }, 30);
-        }
-
-        // Particle Background Logic
-        const canvas = document.createElement('canvas');
-        const container = document.getElementById('particles-js');
-        if(container) {
-            container.appendChild(canvas);
-            const ctx = canvas.getContext('2d');
-
-            let width, height, particles = [];
-
-            function initParticles() {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-                particles = [];
-                for(let i=0; i<80; i++) {
-                    particles.push({
-                        x: Math.random() * width,
-                        y: Math.random() * height,
-                        vx: (Math.random() - 0.5) * 0.5,
-                        vy: (Math.random() - 0.5) * 0.5,
-                        size: Math.random() * 2
-                    });
-                }
-            }
-
-            function animateParticles() {
-                ctx.clearRect(0, 0, width, height);
-                ctx.fillStyle = 'rgba(0, 243, 255, 0.5)';
+            setTimeout(() => {
+                document.getElementById('bar-tech').style.width = '35%';
+                document.getElementById('val-tech').innerText = '35% (Critical)';
+                document.getElementById('val-tech').style.color = '#ff5f56';
                 
-                particles.forEach((p, index) => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    
-                    if(p.x < 0 || p.x > width) p.vx *= -1;
-                    if(p.y < 0 || p.y > height) p.vy *= -1;
-                    
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                    for(let j=index+1; j<particles.length; j++) {
-                        const p2 = particles[j];
-                        const dx = p.x - p2.x;
-                        const dy = p.y - p2.y;
-                        const dist = Math.sqrt(dx*dx + dy*dy);
-                        
-                        if(dist < 100) {
-                            ctx.beginPath();
-                            ctx.strokeStyle = `rgba(0, 243, 255, ${0.2 - dist/500})`;
-                            ctx.moveTo(p.x, p.y);
-                            ctx.lineTo(p2.x, p2.y);
-                            ctx.stroke();
-                        }
-                    }
-                });
+                document.getElementById('bar-content').style.width = '52%';
+                document.getElementById('val-content').innerText = '52% (Needs Work)';
+                document.getElementById('val-content').style.color = '#ffbd2e';
                 
-                requestAnimationFrame(animateParticles);
-            }
-
-            window.addEventListener('resize', initParticles);
-            initParticles();
-            animateParticles();
+                document.getElementById('bar-perf').style.width = '41%';
+                document.getElementById('val-perf').innerText = '41% (Poor)';
+                document.getElementById('val-perf').style.color = '#ff5f56';
+                
+                setTimeout(() => {
+                    urlInput.disabled = false;
+                    urlInput.value = '';
+                    urlInput.focus();
+                }, 2000);
+            }, 100);
         }
-
-
     </script>
 </body>
 </html>
