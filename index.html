@@ -643,47 +643,7 @@
             min-height: 24px;
         }
 
-        /* Game Section */
-        .game-container {
-            max-width: 450px;
-            margin: 0 auto;
-            background: var(--bg-card);
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            border-radius: 8px;
-            padding: 2rem;
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.05);
-            text-align: center;
-        }
 
-        .game-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-            font-family: var(--font-mono);
-            font-weight: 600;
-        }
-
-        #snake-canvas {
-            background: #000;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 4px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-            margin-bottom: 1.5rem;
-            max-width: 100%;
-            height: auto;
-            image-rendering: pixelated;
-        }
-
-        .game-hint {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-top: 1rem;
-        }
-
-        #game-container:focus {
-            outline: 2px solid var(--neon-cyan) !important;
-            box-shadow: 0 0 40px rgba(0, 243, 255, 0.2);
-        }
 
         footer {
             text-align: center;
@@ -861,16 +821,7 @@
             </div>
         </section>
 
-        <!-- Interactive Game Section -->
-        <section id="game-section" class="section">
-            <h2 class="section-title">Take a Break: <span class="neon-text">Neon Bouncer</span></h2>
-            <div class="game-container" id="game-container" tabindex="0" style="outline: none; cursor: pointer;">
-                <canvas id="ball-canvas" width="400" height="400"></canvas>
-                <div class="game-controls">
-                    <p class="game-hint">Click here to play.<br>Use <strong>Left/Right Arrows</strong> to move, <strong>Space</strong> to jump.<br>Press <strong>ESC</strong> to exit game mode.</p>
-                </div>
-            </div>
-        </section>
+
 
         <!-- Contact Section -->
         <section id="contact" class="section contact-section">
@@ -1071,132 +1022,7 @@
             animateParticles();
         }
 
-        // Neon Bouncer (Sticky Ball) Game Logic
-        const bCanvas = document.getElementById('ball-canvas');
-        const gameContainer = document.getElementById('game-container');
-        
-        if (bCanvas) {
-            const bCtx = bCanvas.getContext('2d');
-            let animationFrameId;
-            let isPlaying = false;
-            
-            const ball = {
-                x: 200,
-                y: 200,
-                radius: 15,
-                vx: 0,
-                vy: 0,
-                speed: 5,
-                jumpPower: -10,
-                color: "#b53cff"
-            };
 
-            const gravity = 0.6;
-            const friction = 0.8;
-            
-            let keys = {
-                ArrowLeft: false,
-                ArrowRight: false,
-                Space: false
-            };
-
-            // Start game on focus
-            gameContainer.addEventListener('focus', function() {
-                if(!isPlaying) {
-                    isPlaying = true;
-                    gameLoop();
-                }
-            });
-
-            gameContainer.addEventListener('blur', function() {
-                isPlaying = false;
-                cancelAnimationFrame(animationFrameId);
-                drawPlaceholder();
-            });
-
-            gameContainer.addEventListener('keydown', function(e) {
-                if(['ArrowLeft', 'ArrowRight', 'Space', ' '].includes(e.code)) {
-                    keys[e.code] = true;
-                    if(e.code === 'Space' || e.code === ' ') keys.Space = true;
-                    e.preventDefault(); // prevent scrolling
-                }
-                if(e.code === 'Escape') {
-                    gameContainer.blur(); // get out of interaction
-                }
-            });
-
-            gameContainer.addEventListener('keyup', function(e) {
-                if(['ArrowLeft', 'ArrowRight', 'Space', ' '].includes(e.code)) {
-                    keys[e.code] = false;
-                    if(e.code === 'Space' || e.code === ' ') keys.Space = false;
-                }
-            });
-
-            function updateBall() {
-                // Physics
-                if (keys.ArrowLeft) ball.vx = -ball.speed;
-                if (keys.ArrowRight) ball.vx = ball.speed;
-                if (!keys.ArrowLeft && !keys.ArrowRight) ball.vx *= friction;
-
-                ball.vy += gravity;
-                
-                ball.x += ball.vx;
-                ball.y += ball.vy;
-
-                // Floor collision (Sticky)
-                if (ball.y + ball.radius >= bCanvas.height) {
-                    ball.y = bCanvas.height - ball.radius;
-                    ball.vy = 0;
-                    
-                    // Jump only if on the ground
-                    if (keys.Space) {
-                        ball.vy = ball.jumpPower;
-                    }
-                }
-
-                // Wall collisions
-                if (ball.x - ball.radius < 0) {
-                    ball.x = ball.radius;
-                    ball.vx = 0;
-                }
-                if (ball.x + ball.radius > bCanvas.width) {
-                    ball.x = bCanvas.width - ball.radius;
-                    ball.vx = 0;
-                }
-            }
-
-            function drawBall() {
-                bCtx.fillStyle = "#000";
-                bCtx.fillRect(0, 0, bCanvas.width, bCanvas.height);
-
-                bCtx.beginPath();
-                bCtx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-                bCtx.fillStyle = ball.color;
-                bCtx.shadowBlur = 15;
-                bCtx.shadowColor = ball.color;
-                bCtx.fill();
-                bCtx.closePath();
-                bCtx.shadowBlur = 0;
-            }
-
-            function drawPlaceholder() {
-                bCtx.fillStyle = "#000";
-                bCtx.fillRect(0, 0, bCanvas.width, bCanvas.height);
-                bCtx.fillStyle = "#00f3ff";
-                bCtx.font = "20px 'Fira Code'";
-                bCtx.textAlign = "center";
-                bCtx.fillText("Click Here to Play", bCanvas.width/2, bCanvas.height/2);
-            }
-
-            function gameLoop() {
-                if(!isPlaying) return;
-                updateBall();
-                drawBall();
-                animationFrameId = requestAnimationFrame(gameLoop);
-            }
-
-            drawPlaceholder();
-        }
     </script>
 </body>
 </html>
