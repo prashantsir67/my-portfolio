@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced SERP Emulator | Google, Bing & Brave SEO Tool</title>
+    <meta name="description" content="Pixel-perfect SERP simulator for Google, Bing, and Brave. Check your meta title and description lengths with real-time fetching and dynamic preview.">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Arial&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --google-blue: #1a0dab;
+            --google-url: #202124;
+            --google-desc: #4d5156;
+            --bing-blue: #001ba0;
+            --bing-url: #008272;
+            --bing-desc: #444;
+            --brave-title: #3b3be8;
+            --brave-url: #fb542b;
+            --primary: #2563eb;
+            --border: #dfe1e5;
+            --bg-gray: #f8f9fa;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-gray); color: #202124; overflow-x: hidden; }
+        
+        /* Navbar */
+        .navbar { background: #fff; border-bottom: 1px solid var(--border); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .logo { font-weight: 700; font-size: 1.5rem; color: #111; text-decoration: none; }
+        .logo span { color: var(--primary); }
+        .nav-links a { color: #555; text-decoration: none; font-weight: 500; transition: 0.2s; }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* Main App Grid */
+        .app-container {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            height: calc(100vh - 65px);
+            background: #fff;
+        }
+        
+        /* Sidebar Editor (Left) */
+        .sidebar {
+            background: #ffffff;
+            border-right: 1px solid var(--border);
+            padding: 2rem;
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.03);
+            z-index: 10;
+        }
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        .sidebar h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 2rem; color: #111; display:flex; align-items:center; gap:0.5rem; }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: #444; }
+        .form-control { width: 100%; padding: 0.75rem 1rem; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; font-size: 0.95rem; transition: all 0.2s; }
+        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        textarea.form-control { resize: vertical; min-height: 100px; }
+        
+        .btn-fetch {
+            background: var(--primary); color: #fff; border: none; padding: 0.75rem; border-radius: 8px; width: 100%; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: background 0.2s;
+        }
+        .btn-fetch:hover { background: #1d4ed8; }
+
+        .stat { font-variant-numeric: tabular-nums; color: #16a34a; }
+        .stat.danger { color: #dc2626; }
+
+        /* Search Engine & Device Toggles */
+        .toggle-group { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; background: #f1f3f4; padding: 0.3rem; border-radius: 8px; }
+        .toggle-btn { flex: 1; padding: 0.5rem; text-align: center; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #555; transition: 0.2s; border: none; background: transparent; }
+        .toggle-btn.active { background: #fff; color: #111; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+        /* Right Content Area */
+        .content-wrapper {
+            height: 100%;
+            overflow-y: auto;
+            background: var(--bg-gray);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Mock Search Header */
+        .mobile-header-top { display: none; }
+        /* Icon Toggles */
+        .desktop-only-icon { display: inline-flex; align-items: center; }
+        .mobile-only-icon { display: none; }
+        .is-mobile .desktop-only-icon { display: none !important; }
+        .is-mobile .mobile-only-icon { display: inline-flex !important; }
+        .mobile-header-top { display: none; }
+
+        .se-header {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem 2rem 1rem 2rem;
+            gap: 2rem;
+            background: #fff;
+            width: 100%;
+            border-bottom: 1px solid #ebebeb;
+        }
+        .se-logo { display:flex; align-items:center; user-select: none;}
+        .se-logo img { height: 32px; object-fit: contain; }
+        
+        .se-search-bar {
+            flex: 1;
+            max-width: 690px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 0.5rem 1.2rem;
+            box-shadow: 0 1px 6px rgba(32,33,36,.28);
+            display: flex;
+            align-items: center;
+            color: #9aa0a6;
+            font-size: 1rem;
+        }
+        .se-search-bar input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 1rem;
+            color: #202124;
+            font-family: inherit;
+            background: transparent;
+        }
+
+        /* Mock Tabs */
+        .se-tabs {
+            display: flex;
+            padding: 1rem 2rem 0 130px;
+            gap: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: #fff;
+            width: 100%;
+        }
+        .se-tabs span { padding-bottom: 0.75rem; font-size: 0.875rem; color: #5f6368; cursor: pointer; display: flex; align-items: center; }
+        .se-tabs span.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
+
+        /* Search Results Container */
+        .se-results {
+            padding: 2rem 2rem 4rem 130px;
+            width: 100%;
+            max-width: 1000px;
+            background: #fff;
+            min-height: 100%;
+            flex: 1;
+        }
+
+        /* Shared Result Styles */
+        .serp-item { margin-bottom: 2rem; font-family: Arial, sans-serif; max-width: 600px; }
+        .serp-item.active-preview { padding: 0; background: transparent; border-radius: 0; border-left: none; margin-left: 0; }
+
+        /* ENGINE SPECIFIC STYLES */
+        .engine-google .serp-url-wrap { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: var(--google-url); font-size: 14px; }
+        .engine-google .serp-url-wrap cite { font-style: normal; color: var(--google-desc); font-size: 12px; }
+        .engine-google .serp-title { color: var(--google-blue); font-size: 20px; line-height: 1.3; text-decoration: none; display: block; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .engine-google .serp-desc { color: var(--google-desc); font-size: 14px; line-height: 1.58; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        .engine-bing .serp-url-wrap { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+        .engine-bing .serp-url-wrap cite { color: var(--bing-url); font-style: normal; font-size: 14px; }
+        .engine-bing .serp-title { color: var(--bing-blue); font-size: 18px; font-weight: 600; line-height: 1.2; text-decoration: none; display: block; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .engine-bing .serp-desc { color: var(--bing-desc); font-size: 14px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        .engine-brave .serp-title { color: var(--brave-title); font-size: 20px; font-weight: 500; line-height: 1.3; text-decoration: none; display: block; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .engine-brave .serp-url-wrap { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+        .engine-brave .serp-url-wrap cite { color: var(--text-muted); font-style: normal; font-size: 13px; }
+        .engine-brave .serp-desc { color: #222; font-size: 14px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Skeleton Results */
+        .skeleton { animation: pulse 2s infinite ease-in-out; opacity: 0.6; }
+        .skel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .skel-icon { width: 24px; height: 24px; border-radius: 50%; background: #e8eaed; }
+        .skel-url { width: 150px; height: 12px; background: #e8eaed; border-radius: 4px; }
+        .skel-title { width: 80%; height: 20px; background: #dadce0; border-radius: 4px; margin-bottom: 10px; }
+        .skel-desc { width: 100%; height: 14px; background: #e8eaed; border-radius: 4px; margin-bottom: 6px; }
+        .skel-desc.short { width: 60%; }
+
+        @keyframes pulse { 0% { opacity: 0.7; } 50% { opacity: 0.3; } 100% { opacity: 0.7; } }
+
+        /* iPhone Frame / Mobile View Tweaks */
+        .mobile-frame {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+            background: #f0f2f5;
+            min-height: 100%;
+        }
+        
+        .is-mobile .app-inner {
+            width: 390px;
+            background: #fff;
+            border-radius: 40px;
+            box-shadow: 0 0 0 12px #111, 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            margin: 0 auto;
+            min-height: 800px;
+            border: 2px solid #555;
+        }
+
+        .iphone-status-bar { display: none; }
+        .is-mobile .iphone-status-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 25px 0 25px;
+            font-size: 13px; font-weight: 600; color: #111;
+            position: relative; z-index: 10; background: #fff;
+        }
+        .is-mobile .iphone-notch {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 140px; height: 28px; background: #111;
+            border-radius: 0 0 18px 18px; z-index: 11;
+        }
+
+        .is-mobile .se-header {
+            flex-direction: column;
+            padding: 0.5rem 1rem 0.5rem 1rem;
+            gap: 1rem;
+        }
+        .is-mobile .mobile-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-top: 5px;
+        }
+        .is-mobile .mobile-header-top .fa-bars { font-size: 1.3rem; color: #5f6368; cursor: pointer; }
+        .is-mobile .mobile-header-top .btn-signin { background: #1a73e8; color: #fff; border: none; padding: 0.5rem 1.2rem; border-radius: 20px; font-weight: 500; font-size: 0.9rem; cursor: pointer; }
+        
+        .is-mobile .se-search-bar { max-width: 100%; width: 100%; border-radius: 24px; padding: 0.6rem 1rem; background: #f1f3f4; border: none; box-shadow: none; display: flex; align-items: center; justify-content: space-between; }
+        .is-mobile .se-search-bar input { font-size: 1rem; background: transparent; flex: 1; margin-left: 10px; }
+        
+        .is-mobile .se-tabs {
+            padding: 0 1rem;
+            overflow-x: auto;
+            white-space: nowrap;
+            gap: 1.5rem;
+            justify-content: flex-start;
+            border-bottom: 1px solid #ebebeb;
+        }
+        .is-mobile .se-tabs span { padding-bottom: 0.75rem; color: #5f6368; font-weight: 500; font-size: 14px; }
+        .is-mobile .se-tabs span.active { color: #202124; border-bottom: 2px solid #202124; font-weight: 600; }
+        .is-mobile .se-tabs::-webkit-scrollbar { display: none; }
+        
+        .is-mobile .se-results {
+            padding: 1.5rem 1rem;
+            flex: 1;
+        }
+        .is-mobile .skeleton { display: none !important; }
+
+        /* SEO Article Content */
+        .seo-article-fullwidth {
+            background: #fff;
+            padding: 5rem 5%;
+            border-top: 1px solid var(--border);
+        }
+        .seo-article-container {
+            max-width: 900px;
+            margin: 0 auto;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #333;
+        }
+        .seo-article-container h1, .seo-article-container h2, .seo-article-container h3 {
+            color: #111; margin-top: 2.5rem; margin-bottom: 1rem; line-height: 1.3;
+        }
+        .seo-article-container h1 { font-size: 2.5rem; margin-top: 0; }
+        .seo-article-container h2 { font-size: 1.8rem; border-bottom: 1px solid #eaeaea; padding-bottom: 0.5rem; }
+        .seo-article-container h3 { font-size: 1.4rem; }
+        .seo-article-container p { margin-bottom: 1.5rem; }
+        .seo-article-container ul { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+        
+        .faq-box { margin-bottom: 1.5rem; border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; background: #fdfdfd; }
+        .faq-box h3 { margin-top: 0; font-size: 1.2rem; color: var(--primary); border: none; padding: 0; }
+
+        footer { text-align: center; padding: 2rem; background:#fff; border-top: 1px solid var(--border); color: #666; font-size: 0.9rem; }
+
+        @media (max-width: 900px) {
+            .app-container { grid-template-columns: 1fr; height: auto; }
+            .sidebar { border-right: none; border-bottom: 1px solid var(--border); height: auto; }
+            .content-wrapper { height: auto; overflow: visible; }
+            .mobile-frame { padding: 0; background: #fff; }
+            .is-mobile .app-inner { width: 100%; border-radius: 0; box-shadow: none; border: none; min-height: auto; }
+            .se-header, .se-tabs, .se-results { padding-left: 1rem; padding-right: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">Prashant<span>.SEO</span></a>
+        <div class="nav-links">
+            <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        </div>
+    </nav>
+
+    <div class="app-container">
+        
+        <!-- SIDEBAR CONTROLS (LEFT) -->
+        <aside class="sidebar">
+            <h2>
+                <i class="fas fa-search" style="color:var(--primary)"></i> SERP Emulator
+            </h2>
+
+            <div class="toggle-group">
+                <button class="toggle-btn active" id="btn-desktop"><i class="fas fa-desktop"></i> Desktop</button>
+                <button class="toggle-btn" id="btn-mobile"><i class="fas fa-mobile-alt"></i> Mobile</button>
+            </div>
+
+            <div class="toggle-group" id="engine-tabs">
+                <button class="toggle-btn active" data-engine="google">Google</button>
+                <button class="toggle-btn" data-engine="bing">Bing</button>
+                <button class="toggle-btn" data-engine="brave">Brave</button>
+            </div>
+
+            <div class="form-group">
+                <label>Fetch Live Website</label>
+                <div style="display:flex; gap:0.5rem;">
+                    <input type="url" id="input-url" class="form-control" value="https://prashant-joshi.com.np" placeholder="example.com">
+                    <button class="btn-fetch" id="fetch-btn" style="width: auto; padding: 0 1.2rem;" title="Fetch SEO Data">
+                        <i class="fas fa-bolt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Meta Title 
+                    <span id="title-stats" class="stat">0px / 600px</span>
+                </label>
+                <input type="text" id="input-title" class="form-control" value="Prashant Joshi | SEO Executive & Digital Growth Specialist">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Meta Description 
+                    <span id="desc-stats" class="stat">0px / 920px</span>
+                </label>
+                <textarea id="input-desc" class="form-control">Portfolio of Prashant Joshi, SEO Executive at Nest Nepal. Specialized in technical SEO, organic growth, and content optimization.</textarea>
+            </div>
+            
+            <div style="margin-top: 2rem; font-size: 0.85rem; color: #666; background: #f1f5f9; padding: 1rem; border-radius: 8px; border-left: 3px solid var(--primary);">
+                <strong>Pixel Perfect:</strong> Search engines truncate based on pixel width, not characters.
+            </div>
+        </aside>
+
+        <!-- RIGHT CONTENT WRAPPER -->
+        <div class="content-wrapper engine-google" id="preview-area">
+            <div class="mobile-frame" id="mobile-frame">
+                <div class="app-inner">
+                    
+                    <!-- Header -->
+                    <div class="iphone-status-bar">
+                        <span>11:00</span>
+                        <div class="iphone-notch"></div>
+                        <span><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <div class="se-header">
+                        <div class="mobile-header-top">
+                            <i class="fas fa-bars"></i>
+                            <div class="se-logo" id="se-logo-mobile">
+                                <img src="google.png" alt="Google">
+                            </div>
+                            <button class="btn-signin">Sign in</button>
+                        </div>
+                        
+                        <div class="se-logo desktop-only-icon" id="se-logo-desktop">
+                            <img src="google.png" alt="Google">
+                        </div>
+                        
+                        <div class="se-search-bar">
+                            <i class="fas fa-search mobile-only-icon"></i>
+                            <input type="text" id="mock-search-input" value="serp" readonly>
+                            <div style="display:flex; align-items:center; gap:14px; margin-left: auto;">
+                                <i class="fas fa-times desktop-only-icon" style="color:#70757a; font-size: 1.1rem; cursor:pointer;"></i>
+                                <span class="desktop-only-icon" style="border-left: 1px solid #dfe1e5; height: 24px; margin: 0 4px;"></span>
+                                <i class="fas fa-microphone" style="color: #4285f4; font-size: 1.1rem;"></i>
+                                <i class="fas fa-camera" style="color: #ea4335; font-size: 1.1rem;"></i>
+                                <i class="fas fa-search desktop-only-icon" style="color: #4285f4; font-size: 1.1rem; margin-left: 4px;"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="desktop-only-icon" style="margin-left: auto;">
+                            <i class="fas fa-cog" style="color:#5f6368; font-size: 1.4rem; cursor: pointer;"></i>
+                        </div>
+                    </div>
+
+                    <div class="se-tabs">
+                        <span class="mobile-only-icon"><i class="fas fa-sparkles" style="color:#a8c7fa; margin-right:4px;"></i> AI Mode</span>
+                        <span class="active">All</span>
+                        <span>Images</span>
+                        <span>Videos</span>
+                        <span>News</span>
+                        <span class="desktop-only-icon">Shopping</span>
+                        <span class="mobile-only-icon">Forums</span>
+                        <span class="desktop-only-icon">Maps</span>
+                    </div>
+
+                    <!-- SERP Results Array -->
+                    <div class="se-results">
+                        <!-- Our Live Preview Result -->
+                        <div class="serp-item active-preview" id="serp-box">
+                            <div class="serp-url-wrap">
+                                <img src="favicon.png" width="28" height="28" style="border-radius:50%; background:#f1f3f4; padding:2px; object-fit:contain;" onerror="this.style.display='none'" id="preview-favicon">
+                                <div style="display:flex; flex-direction:column; line-height:1.2;">
+                                    <span style="color:#202124; font-size:14px; font-weight:400;" id="preview-sitename">Prashant-joshi</span>
+                                    <cite id="preview-url">prashant-joshi.com.np</cite>
+                                </div>
+                                <span style="margin-left:auto; color:#70757a; font-size:18px;">⋮</span>
+                            </div>
+                            <a href="#" class="serp-title" id="preview-title" target="_blank">Title goes here</a>
+                            <div class="serp-desc" id="preview-desc">Description goes here</div>
+                        </div>
+
+                        <!-- Skeleton Dummy Result -->
+                        <div class="serp-item skeleton">
+                            <div class="skel-header">
+                                <div class="skel-icon"></div>
+                                <div class="skel-url"></div>
+                            </div>
+                            <div class="skel-title"></div>
+                            <div class="skel-desc"></div>
+                            <div class="skel-desc short"></div>
+                        </div>
+
+                        <div class="serp-item skeleton">
+                            <div class="skel-header">
+                                <div class="skel-icon"></div>
+                                <div class="skel-url" style="width:120px;"></div>
+                            </div>
+                            <div class="skel-title" style="width:70%;"></div>
+                            <div class="skel-desc"></div>
+                            <div class="skel-desc" style="width:80%;"></div>
+                        </div>
+                        
+                        <div class="serp-item skeleton" style="animation-delay: 0.5s;">
+                            <div class="skel-header">
+                                <div class="skel-icon"></div>
+                                <div class="skel-url" style="width:180px;"></div>
+                            </div>
+                            <div class="skel-title" style="width:85%;"></div>
+                            <div class="skel-desc"></div>
+                            <div class="skel-desc" style="width:50%;"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEO ARTICLE CONTENT -->
+    <article class="seo-article-fullwidth">
+        <div class="seo-article-container">
+            <h1>Ultimate SERP Simulator & Pixel Checker for Google, Bing & Brave</h1>
+            <p>Welcome to the most accurate search engine results page (SERP) simulator on the web. As a technical SEO professional, I understand that crafting the perfect meta title and description is critical for driving organic click-through rates (CTR). However, merely counting characters is an outdated and inaccurate method. Search engines like Google, Bing, and Brave allocate snippet space based on <strong>pixel width</strong>, not character limits. This tool is designed to help you write metadata that fits flawlessly across every device and major search engine.</p>
+
+            <h2>Why Pixel Length Matters More Than Character Count</h2>
+            <p>For years, the SEO community operated on the rule of thumb: keep meta titles under 60 characters and descriptions under 160 characters. While this was a helpful guideline, it is fundamentally flawed in modern web typography.</p>
+            <p>Search engines use proportional fonts (such as Arial or Roboto). This means that every letter takes up a different amount of horizontal space. Consider the letter "W" versus the letter "i". A title composed of 60 wide letters will consume vastly more pixel space than a title with 60 narrow letters. If your title exceeds the pixel boundary allocated by the search engine, it gets brutally truncated with an ellipsis (...), which can severely damage your message and your CTR.</p>
+            <p>By using a pixel-based SERP simulator, you guarantee that your carefully crafted brand messaging remains intact, exactly as you intended it to be seen by potential visitors.</p>
+
+            <h2>The Anatomy of a Modern Search Snippet</h2>
+            <p>A standard search snippet is composed of several critical elements. Optimizing each is essential for dominating the search results.</p>
+            
+            <h3>1. The Meta Title (Title Tag)</h3>
+            <p>The title tag is arguably the most important on-page SEO element. It is the large, clickable blue link that users see first. A highly optimized title tag should include your primary keyword naturally, evoke curiosity or urgency, and end with your brand name for trust building. Ensure the most important information is front-loaded so it catches the user's eye immediately.</p>
+            
+            <h3>2. The Meta Description</h3>
+            <p>The meta description sits below the title tag and acts as your organic ad copy. While it is not a direct ranking factor for Google, it heavily influences whether a user decides to click your link over a competitor's. A strong description expands on the title, includes secondary keywords, and concludes with a clear call-to-action (CTA).</p>
+            
+            <h3>3. The URL and Favicon</h3>
+            <p>In modern SERP layouts, Google and other engines display the site's favicon alongside a breadcrumb URL above the title. Ensuring you have a high-quality, recognizable favicon helps your listing stand out in a sea of generic text results.</p>
+
+            <h2>Search Engine Specific Pixel Limits (2026 Guidelines)</h2>
+            <p>Different search engines render results using slightly different fonts and container sizes. Our simulator dynamically adjusts these limits based on the engine you select.</p>
+
+            <h3>Google SERP Limits</h3>
+            <ul>
+                <li><strong>Desktop Titles:</strong> Maximum width of ~600 pixels. Usually equates to 55-65 characters depending on case and letter width.</li>
+                <li><strong>Mobile Titles:</strong> Maximum width of ~500 pixels. Usually equates to 50-55 characters.</li>
+                <li><strong>Desktop Descriptions:</strong> Maximum width of ~920 pixels. Roughly two lines of text (150-160 characters).</li>
+                <li><strong>Mobile Descriptions:</strong> Maximum width of ~680 pixels. Roughly 120-130 characters.</li>
+            </ul>
+
+            <h3>Bing SERP Limits</h3>
+            <ul>
+                <li><strong>Desktop Titles:</strong> Bing utilizes a slightly bolder font weight. The maximum width is around 580 pixels.</li>
+                <li><strong>Mobile Titles:</strong> Maximum width of ~480 pixels.</li>
+                <li><strong>Desktop Descriptions:</strong> Maximum width of ~900 pixels.</li>
+            </ul>
+            
+            <h3>Brave Search Limits</h3>
+            <p>Brave Search, known for its privacy-centric approach, uses a unique UI with distinct typography. Its limits are very similar to Google's (around 600px for titles), but the visual weight of the font is different. Optimizing for Google typically ensures safety on Brave, but our tool lets you verify it visually.</p>
+
+            <h2>Advanced SEO Copywriting Techniques</h2>
+            <p>Writing for the SERPs is an art form that blends technical constraints with human psychology. Here are advanced strategies to improve your snippets:</p>
+            <ul>
+                <li><strong>Front-Load Primary Keywords:</strong> Users scan results rapidly. Place your most critical keyword at the very beginning of the title tag.</li>
+                <li><strong>Utilize Parentheses and Brackets:</strong> Studies show that adding (Parentheses) or [Brackets] to titles can increase CTR by up to 38% because they break up the visual monotony of text.</li>
+                <li><strong>Leverage Action Verbs:</strong> Start meta descriptions with verbs like "Discover," "Learn," "Get," or "Buy" to drive user action.</li>
+                <li><strong>Match Search Intent:</strong> Ensure your title and description precisely match what the user is looking for—whether it's informational, navigational, or transactional.</li>
+            </ul>
+
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-box">
+                <h3>1. Why does Google rewrite my meta title?</h3>
+                <p>Google frequently rewrites title tags if they feel the provided title doesn't adequately represent the page content or match the user's specific query. They might pull text from your H1 tag, or append your brand name. The best way to prevent this is to write highly relevant, accurate titles that fit within the pixel limits.</p>
+            </div>
+            
+            <div class="faq-box">
+                <h3>2. Does the meta description impact my Google ranking?</h3>
+                <p>No, meta descriptions are not a direct ranking factor in Google's algorithm. However, they are crucial for Click-Through Rate (CTR). A higher CTR can indirectly signal to Google that your page is highly relevant to the search query, which can positively influence long-term rankings.</p>
+            </div>
+            
+            <div class="faq-box">
+                <h3>3. How do you measure pixel width accurately?</h3>
+                <p>Our SERP simulator uses an advanced HTML5 hidden canvas engine. It takes your text, applies the exact font family, size, and weight used by the selected search engine (e.g., Arial 20px for Google Titles), and calculates the physical pixel width of the rendered text string in real-time.</p>
+            </div>
+            
+            <div class="faq-box">
+                <h3>4. What happens if I leave the meta description blank?</h3>
+                <p>If you do not provide a meta description, search engines will automatically scrape text from the body of your page to generate a snippet. This is often disastrous for CTR, as the scraped text may be disjointed, irrelevant, or cut off mid-sentence. Always write a custom description.</p>
+            </div>
+
+            <div class="faq-box">
+                <h3>5. Should I include my brand name in every title tag?</h3>
+                <p>Generally, yes. It is a best practice to append your brand name to the end of your title tags (e.g., "Keyword | Brand Name"). This builds brand recognition. If your title is very long, Google may automatically append it for you, which is why checking your pixel length beforehand is critical.</p>
+            </div>
+            
+            <div class="faq-box">
+                <h3>6. Does mobile optimization require different meta tags?</h3>
+                <p>You cannot set separate meta tags specifically for mobile devices. You have one title and one description. Because mobile pixel limits are stricter than desktop limits, the safest strategy is to front-load the most important information so that even if it truncates on a phone, the core message is still visible.</p>
+            </div>
+        </div>
+    </article>
+
+    <footer>
+        <p>&copy; 2026 Prashant Joshi. Built for Technical SEOs.</p>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const inputUrl = document.getElementById('input-url');
+        const inputTitle = document.getElementById('input-title');
+        const inputDesc = document.getElementById('input-desc');
+        const fetchBtn = document.getElementById('fetch-btn');
+        const mockSearchInput = document.getElementById('mock-search-input');
+        
+        const previewUrl = document.getElementById('preview-url');
+        const previewSitename = document.getElementById('preview-sitename');
+        const previewTitle = document.getElementById('preview-title');
+        const previewDesc = document.getElementById('preview-desc');
+        const previewFavicon = document.getElementById('preview-favicon');
+        
+        const titleStats = document.getElementById('title-stats');
+        const descStats = document.getElementById('desc-stats');
+
+        const previewArea = document.getElementById('preview-area');
+        const seLogoDesktop = document.getElementById('se-logo-desktop');
+        const seLogoMobile = document.getElementById('se-logo-mobile');
+
+        const engineTabs = document.querySelectorAll('#engine-tabs .toggle-btn');
+        const btnDesktop = document.getElementById('btn-desktop');
+        const btnMobile = document.getElementById('btn-mobile');
+
+        let currentEngine = 'google';
+        let isMobile = false;
+
+        // Image Logos for engines
+        const logos = {
+            google: '<img src="google.png" alt="Google">',
+            bing: '<img src="bing.png" alt="Bing">',
+            brave: '<img src="brave.png" alt="Brave">'
+        };
+
+        // Engine Selection Logic
+        engineTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                engineTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentEngine = tab.dataset.engine;
+                
+                previewArea.className = `content-wrapper engine-${currentEngine} ${isMobile ? 'is-mobile' : ''}`;
+                seLogoDesktop.innerHTML = logos[currentEngine];
+                seLogoMobile.innerHTML = logos[currentEngine];
+                
+                updateSerp();
+            });
+        });
+
+        // Device Selection Logic
+        btnDesktop.addEventListener('click', () => {
+            isMobile = false;
+            btnDesktop.classList.add('active');
+            btnMobile.classList.remove('active');
+            previewArea.classList.remove('is-mobile');
+            
+            // Show Desktop Logo, Hide Mobile Top Bar
+            seLogoDesktop.style.display = 'flex';
+            document.querySelector('.mobile-header-top').style.display = 'none';
+            
+            updateSerp();
+        });
+
+        btnMobile.addEventListener('click', () => {
+            isMobile = true;
+            btnMobile.classList.add('active');
+            btnDesktop.classList.remove('active');
+            previewArea.classList.add('is-mobile');
+            
+            // Hide Desktop Logo, Show Mobile Top Bar
+            seLogoDesktop.style.display = 'none';
+            document.querySelector('.mobile-header-top').style.display = 'flex';
+            
+            updateSerp();
+        });
+
+        // Trigger fetch on Enter key inside the URL input
+        inputUrl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                fetchBtn.click();
+            }
+        });
+
+        // Measurement Engine
+        const measureCanvas = document.createElement('canvas');
+        const measureCtx = measureCanvas.getContext('2d');
+
+        function measureText(text, font) {
+            measureCtx.font = font;
+            return Math.floor(measureCtx.measureText(text).width);
+        }
+
+        function formatUrl(url) {
+            try {
+                let u = new URL(url.startsWith('http') ? url : 'https://' + url);
+                return {
+                    domain: u.hostname.replace('www.', ''),
+                    path: u.pathname === '/' ? '' : ' › ' + u.pathname.substring(1).split('/').join(' › ')
+                };
+            } catch(e) {
+                return { domain: url, path: '' };
+            }
+        }
+
+        function updateSerp() {
+            let urlVal = inputUrl.value.trim();
+            if(!urlVal) urlVal = 'example.com';
+            
+            mockSearchInput.value = urlVal;
+            
+            let formatted = formatUrl(urlVal);
+            let sitename = formatted.domain.split('.')[0];
+            sitename = sitename.charAt(0).toUpperCase() + sitename.slice(1);
+            
+            if(currentEngine === 'google') {
+                previewSitename.innerText = sitename;
+                previewSitename.style.display = 'block';
+                previewUrl.innerText = formatted.domain + formatted.path;
+            } else if (currentEngine === 'bing') {
+                previewSitename.style.display = 'none';
+                previewUrl.innerText = formatted.domain + formatted.path;
+            } else {
+                previewSitename.style.display = 'none';
+                previewUrl.innerText = formatted.domain + formatted.path;
+            }
+
+            let tMaxPx, dMaxPx;
+            if(currentEngine === 'google') {
+                tMaxPx = isMobile ? 500 : 600;
+                dMaxPx = isMobile ? 680 : 920;
+            } else if (currentEngine === 'bing') {
+                tMaxPx = isMobile ? 480 : 580;
+                dMaxPx = isMobile ? 650 : 900;
+            } else {
+                tMaxPx = isMobile ? 500 : 600;
+                dMaxPx = isMobile ? 650 : 900;
+            }
+            
+            const tText = inputTitle.value;
+            let tFont = currentEngine === 'bing' ? '600 18px Arial' : '20px Arial';
+            const tPx = measureText(tText, tFont);
+            previewTitle.innerText = tText || "Example Title";
+            
+            let actualLink = urlVal;
+            if (!actualLink.startsWith('http://') && !actualLink.startsWith('https://')) {
+                actualLink = 'https://' + actualLink;
+            }
+            previewTitle.href = actualLink;
+            
+            titleStats.innerText = `${tPx}px / ${tMaxPx}px`;
+            titleStats.className = (tPx > tMaxPx) ? 'stat danger' : 'stat perfect';
+
+            const dText = inputDesc.value;
+            const dPx = measureText(dText, '14px Arial');
+            previewDesc.innerText = dText || "Example description text.";
+            descStats.innerText = `${dPx}px / ${dMaxPx}px`;
+            descStats.className = (dPx > dMaxPx) ? 'stat danger' : 'stat perfect';
+        }
+
+        async function triggerFetch() {
+            const url = inputUrl.value.trim();
+            if(!url) return;
+            
+            const targetUrl = url.startsWith('http') ? url : 'https://' + url;
+            inputUrl.value = targetUrl;
+            
+            fetchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            fetchBtn.disabled = true;
+            
+            try {
+                const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(targetUrl)}`);
+                if(res.ok) {
+                    const json = await res.json();
+                    if(json.status === 'success' && json.data) {
+                        const title = json.data.title || '';
+                        const metaDesc = json.data.description || '';
+                        
+                        inputTitle.value = title.trim();
+                        inputDesc.value = metaDesc.trim();
+                        
+                        if(json.data.logo && json.data.logo.url) {
+                            previewFavicon.src = json.data.logo.url;
+                            previewFavicon.style.display = 'inline-block';
+                        } else {
+                            try {
+                                const urlObj = new URL(targetUrl);
+                                previewFavicon.src = `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=32`;
+                                previewFavicon.style.display = 'inline-block';
+                            } catch(e) {}
+                        }
+                        updateSerp();
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            }
+            
+            fetchBtn.innerHTML = '<i class="fas fa-bolt"></i>';
+            fetchBtn.disabled = false;
+        }
+
+        fetchBtn.addEventListener('click', triggerFetch);
+
+        inputUrl.addEventListener('input', updateSerp);
+        inputTitle.addEventListener('input', updateSerp);
+        inputDesc.addEventListener('input', updateSerp);
+        
+        // Ensure Desktop state on load
+        seLogoDesktop.style.display = 'flex';
+        document.querySelector('.mobile-header-top').style.display = 'none';
+
+        updateSerp();
+    </script>
+</body>
+</html>
