@@ -870,6 +870,19 @@
     </style>
 </head>
 <body>
+    <!-- Relief Banner -->
+    <div id="relief-banner" class="glass-panel" style="border-radius: 0; border-top: none; border-left: none; border-right: none; text-align: center; padding: 12px 20px; display: none; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; background: rgba(15, 15, 19, 0.95); border-bottom: 1px solid rgba(0, 240, 255, 0.3); position: sticky; top: 0; z-index: 2000;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <i class="fa-solid fa-hand-holding-heart" style="color: var(--secondary);"></i>
+            <span style="font-weight: 500; font-size: 0.95rem; color: var(--text-main);">
+                Nepal Disaster Relief: <span style="color: var(--text-muted);">Support the Government of Nepal Prime Minister's Disaster Relief Fund</span>
+            </span>
+        </div>
+        <a href="https://pmdrf.nchl.com.np/" target="_blank" rel="noopener noreferrer" class="btn btn-glow" style="padding: 6px 18px; font-size: 0.85rem; border-radius: 6px; box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);">Donate Now <i class="fa-solid fa-arrow-right-long" style="font-size: 0.8rem;"></i></a>
+        <button onclick="dismissReliefBanner()" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; padding: 5px; transition: color 0.3s;" onmouseover="this.style.color='var(--secondary)'" onmouseout="this.style.color='var(--text-muted)'">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T6PFLVV8" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <!-- Backgrounds -->
@@ -1280,6 +1293,39 @@
                 }, 2000);
             }, 100);
         }
+
+        // Relief Banner Logic
+        function initReliefBanner() {
+            if (localStorage.getItem('nepal-relief-dismissed') !== 'true') {
+                const banner = document.getElementById('relief-banner');
+                banner.style.display = 'flex';
+                const navbar = document.querySelector('.navbar');
+                if (navbar) {
+                    navbar.style.top = banner.offsetHeight + 'px';
+                }
+            }
+        }
+
+        function dismissReliefBanner() {
+            document.getElementById('relief-banner').style.display = 'none';
+            localStorage.setItem('nepal-relief-dismissed', 'true');
+            const navbar = document.querySelector('.navbar');
+            if (navbar) {
+                navbar.style.top = '0px';
+            }
+        }
+        
+        initReliefBanner();
+        
+        window.addEventListener('resize', () => {
+            const banner = document.getElementById('relief-banner');
+            if (banner && banner.style.display === 'flex') {
+                const navbar = document.querySelector('.navbar');
+                if (navbar) {
+                    navbar.style.top = banner.offsetHeight + 'px';
+                }
+            }
+        });
 
     </script>
 </body>
